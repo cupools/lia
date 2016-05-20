@@ -1,0 +1,19 @@
+{
+  "name": "sprites",
+  "version": "0.0.1",
+  "description": "build less variable and sprite image",
+  "main": "sprite.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sprite"
+  ],
+  "author": "liyh",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "glob": "^7.0.3",
+    "spritesmith": "^3.1.0"
+  }
+}

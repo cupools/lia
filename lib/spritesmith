@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+'use strict';
+
+let Spritesmith = require('spritesmith');
+let sprites = JSON.parse(process.argv[3]);
+
+Spritesmith.run({
+    src: sprites
+}, (err, result) => {
+    process.stdout.write(JSON.stringify(result));
+});
