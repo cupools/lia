@@ -4,9 +4,13 @@
 
 let Spritesmith = require('spritesmith');
 let sprites = JSON.parse(process.argv[3]);
+let options = JSON.parse(process.argv[5]);
 
 Spritesmith.run({
-    src: sprites
+    src: sprites,
+    padding: options.padding,
+    algorithm: options.algorithm
 }, (err, result) => {
+
     process.stdout.write(JSON.stringify(result));
 });

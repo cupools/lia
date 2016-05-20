@@ -13,13 +13,16 @@ npm i --save-dev git+ssh://git@git.ucweb.local:lyh106415/sprites.git
 
 ```js
 module.exports = [{
-    src: ['./components/images/prize/*.png'],
-    image: './components/sprites/sprites.png',
-    style: './components/sprites/sprites.less',
-    prefix: 'sprite-',
+    src: ['./components/images/achieves/*.png'],
+    image: './components/sprites/sprites_achieve.png',
+    style: './components/sprites/sprites_achieve.less',
+    prefix: 'sp-',
     cssPath: './',
     unit: 'rem',
-    convert: 100
+    convert: 100,
+    blank: 2,
+    padding: 10,
+    algorithm: 'binary-tree'
 }];
 ```
 ### 2. 添加命令
