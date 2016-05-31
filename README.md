@@ -7,9 +7,15 @@
 npm i --save-dev git+ssh://git@git.ucweb.local:lyh106415/sprites.git
 ```
 
+or 
+
+```bash
+npm i -g git+ssh://git@git.ucweb.local:lyh106415/sprites.git
+```
+
 ## 使用
 ### 1. 添加命令
-在 `package.json` 中增加如下命令
+如果是 `--save-dev` 则在 `package.json` 中增加如下命令
 
 ```js
 "scripts": {
@@ -24,8 +30,8 @@ npm i --save-dev git+ssh://git@git.ucweb.local:lyh106415/sprites.git
 ```js
 module.exports = [{
     src: ['./components/images/achieves/*.png'],
-    image: './components/sprites/sprites_achieve.png',
-    style: './components/sprites/sprites_achieve.less',
+    image: './components/sprites/sprites.png',
+    style: './components/sprites/sprites.less',
     prefix: 'sp-',
     cssPath: './',
     unit: 'rem',
@@ -121,12 +127,12 @@ module.exports = [{
 
 ### tmpl
 - 类型：String
-- 说明：输出样式文件或者 js 对象格式的模板文件路径。可用的变量有`name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. 使用 ES6 template 的语法。
+- 说明：输出样式文件或者 js 对象格式的模板文件路径。可用的变量有 `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. 使用 ES6 template 的语法。
 - 默认：''
 
 ### wrap
 - 类型：String
-- 说明：弥补 `tmpl` 参数的不足，类似 <code>module.exports=[${content}];</code>。可用的变量有`content`, 使用 ES6 template 的语法。
+- 说明：弥补 `tmpl` 参数的不足，类似 <code>module.exports=[${content}];</code>。可用的变量有 `content`, 使用 ES6 template 的语法。
 - 默认：''
 
 ## 更新日志

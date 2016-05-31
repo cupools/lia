@@ -15,7 +15,7 @@ switch(command) {
     case 'help':
         console.log('');
         console.log('Usage: \n');
-        console.log('sprites            build sprite images and output variables follow sprites_conf.js');
+        console.log('sprites            build sprite images and variables follow sprites_conf.js');
         console.log('sprites init       create sprites_conf.js');
         console.log('');
         break;
