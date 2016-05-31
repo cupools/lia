@@ -1,10 +1,14 @@
 {
   "name": "sprites",
-  "version": "0.0.1",
-  "description": "build less variable and sprite image",
-  "main": "sprite.js",
+  "version": "0.1.1",
+  "description": "build sprite images and output variables",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel": "babel lib/sprites.js -o lib/sprites.com.js --presets es2015 -w"
+  },
+  "bin": {
+    "sprites": "./bin/sprites.js"
   },
   "keywords": [
     "sprite"
@@ -12,6 +16,7 @@
   "author": "liyh",
   "license": "MIT",
   "dependencies": {
+    "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "spritesmith": "^3.1.0"
