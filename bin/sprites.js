@@ -2,13 +2,12 @@
 
 'use strict';
 
-var fs = require('fs-extra');
-var path = require('path');
-var Sprites = require('../main');
-var confPath = path.resolve(process.cwd(), 'sprites_conf.js');
-var config = [];
+let fs = require('fs-extra');
+let path = require('path');
+let Sprites = require('../main');
+let confPath = path.resolve(process.cwd(), 'sprites_conf.js');
 
-var command = process.argv[2];
+let command = process.argv[2];
 
 switch(command) {
     case '-h':
@@ -17,6 +16,7 @@ switch(command) {
         console.log('Usage: \n');
         console.log('sprites            build sprite images and variables follow sprites_conf.js');
         console.log('sprites init       create sprites_conf.js');
+        console.log('sprites now        build sprite images in current directory');
         console.log('');
         break;
 
@@ -25,15 +25,28 @@ switch(command) {
         console.log('  [build]: sprites_conf.js done.');
         break;
 
+    case 'now':
+        let dirname = path.basename(process.cwd());
+        let imageName = 'sprites-' + dirname;
+        let sp = new Sprites({
+            src: [`!(${imageName}).png`],
+            image: imageName + '.png',
+            algorithm: 'top-down',
+            style: false
+        });
+        sp.run();
+        break;
+
     default:
+        let config = [];
         try {
             config = require(confPath);
         } catch(e) {
-            console.log('[warn]: sprites_conf.js not Found.');
+            console.log('[warn]: sprites_conf.js not Found. Try `sprites init`.');
         }
 
         config.map(conf => {
-            var sp = new Sprites(conf);
+            let sp = new Sprites(conf);
             sp.run();
         });
 }

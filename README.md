@@ -1,37 +1,32 @@
 # Sprites
-根据配置输出精灵图和对应的样式文件，__支持 rem 和 px__
+根据配置输出精灵图和对应的样式文件，__支持 rem 和 px__, 支持快速合并精灵图
 
 ## 安装
-
-```bash
-npm i --save-dev git+ssh://git@git.ucweb.local:lyh106415/sprites.git
-```
-
-or 
 
 ```bash
 npm i -g git+ssh://git@git.ucweb.local:lyh106415/sprites.git
 ```
 
 ## 使用
-### 1. 添加命令
-如果是 `--save-dev` 则在 `package.json` 中增加如下命令
 
-```js
-"scripts": {
-    ...
-    "sprites": "sprites"
-},
+```bash
+sprites -h
+
+Usage: 
+
+sprites            build sprite images and variables follow sprites_conf.js
+sprites init       create sprites_conf.js
+sprites now        build sprite images in current directory
 ```
 
-### 2. 配置文件
-在 `frontend` 目录下创建配置文件 `sprites_conf.js`, 执行命令 `npm run sprites init` 即可，格式如下：
+### 1. 添加配置文件
+在 `frontend` 目录下执行 `sprites init` 创建配置文件 `sprites_conf.js`, 大致内容如下：
 
 ```js
 module.exports = [{
     src: ['./components/images/achieves/*.png'],
     image: './components/sprites/sprites.png',
-    style: './components/sprites/sprites.less',
+    style: './components/sprites/sprites.scss',
     prefix: 'sp-',
     cssPath: './',
     unit: 'rem',
@@ -44,8 +39,8 @@ module.exports = [{
 }];
 ```
 
-### 3. 产出图片和样式
-控制台输入 `npm run sprites` 即可。有了图片和样式文件之后，是 mixin 还是直接引用随意。`selector` 的命名由图片名称和配置中的 `prefix` 决定
+### 2. 产出图片和样式
+执行 `sprites` 即可。有了图片和样式文件之后，是 extend 还是直接引用随意。`selector` 的命名由图片名称和配置中的 `prefix` 决定
 
 产出的样式文件如下：
 
@@ -136,6 +131,6 @@ module.exports = [{
 - 默认：''
 
 ## 更新日志
-
+- v0.1.2: 添加 `sprites now` 命令，在当前目录中匹配所有 .png 图片并输出 `top-down` 布局的精灵图，不输出样式文件
 - v0.1.1: 添加 `tmpl` 和 `wrap` 参数，允许产出 json 及其他任意类型的精灵图数据格式
 - v0.0.1: 基本功能

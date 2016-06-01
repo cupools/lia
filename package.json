@@ -1,6 +1,6 @@
 {
   "name": "sprites",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "build sprite images and output variables",
   "main": "main.js",
   "scripts": {

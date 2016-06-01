@@ -11,6 +11,5 @@ Spritesmith.run({
     padding: options.padding,
     algorithm: options.algorithm
 }, (err, result) => {
-
     process.stdout.write(JSON.stringify(result));
 });
