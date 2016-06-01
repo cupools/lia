@@ -21,7 +21,7 @@ switch(command) {
         break;
 
     case 'init':
-        fs.copySync(path.resolve(__dirname, '../lib/tmpl/sprites_conf.tmpl'), path.resolve(process.cwd(), 'sprites_confsss.js'));
+        fs.copySync(path.resolve(__dirname, '../lib/tmpl/sprites_conf.tmpl'), path.resolve(process.cwd(), 'sprites_conf.js'));
         console.log('  [build]: sprites_conf.js done.');
         break;
 
