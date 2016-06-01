@@ -26,11 +26,10 @@ switch(command) {
         break;
 
     case 'now':
-        let dirname = path.basename(process.cwd());
-        let imageName = 'sprites-' + dirname;
+        let image = 'sprites-' + path.basename(process.cwd()) + '.png';
         let sp = new Sprites({
-            src: [`!(${imageName}).png`],
-            image: imageName + '.png',
+            src: ['*.png'],
+            image: image,
             algorithm: 'top-down',
             style: false
         });
