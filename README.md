@@ -9,8 +9,8 @@ npm i -g git+ssh://git@git.ucweb.local:lyh106415/sprites.git
 
 ## 使用
 
-```bash
-sprites -h
+```
+$ sprites -h
 
 Usage: 
 
@@ -18,13 +18,21 @@ sprites            build sprite images and variables follow sprites_conf.js
 sprites init       create sprites_conf.js
 sprites now        build sprite images in current directory
 ```
+### 基础使用
 
-### 1. 添加配置文件
-在 `frontend` 目录下执行 `sprites init` 创建配置文件 `sprites_conf.js`, 大致内容如下：
+```bash
+$ sprites init
+    [build]: sprites_conf.js done.
+$ sprites
+    [build]: ./components/sprites/sprites.png
+    [build]: ./components/sprites/sprites.scss
+```
+
+其中，配置文件 sprites_conf.js 的内容如下：
 
 ```js
 module.exports = [{
-    src: ['./components/images/achieves/*.png'],
+    src: ['./components/images/*.png'],
     image: './components/sprites/sprites.png',
     style: './components/sprites/sprites.scss',
     prefix: 'sp-',
@@ -39,39 +47,38 @@ module.exports = [{
 }];
 ```
 
-### 2. 产出图片和样式
-执行 `sprites` 即可。有了图片和样式文件之后，是 extend 还是直接引用随意。`selector` 的命名由图片名称和配置中的 `prefix` 决定
-
-产出的样式文件如下：
+输出的 sprites.scss 内容如下：
 
 ```css
-.sp-prize_01 {
-    width: 1.28rem;
-    height: 1.28rem;
+.sp-body {
+    width: 1.3rem;
+    height: 1.3rem;
     background: url(./sprites.png) no-repeat;
-    background-size: 2.56rem 2.56rem;
+    background-size: 2.7rem 2.7rem;
     background-position: 0rem 0rem;
 }
-.sp-prize_02 {
-    width: 1.28rem;
-    height: 1.28rem;
+.sp-foot {
+    width: 1.3rem;
+    height: 1.3rem;
     background: url(./sprites.png) no-repeat;
-    background-size: 2.56rem 2.56rem;
-    background-position: -1.28rem 0rem;
+    background-size: 2.7rem 2.7rem;
+    background-position: -1.4rem 0rem;
 }
-.sp-prize_03 {
-    width: 1.28rem;
-    height: 1.28rem;
+.sp-hand {
+    width: 1.3rem;
+    height: 1.3rem;
     background: url(./sprites.png) no-repeat;
-    background-size: 2.56rem 2.56rem;
-    background-position: 0rem -1.28rem;
+    background-size: 2.7rem 2.7rem;
+    background-position: 0rem -1.4rem;
 }
 ```
+
+在输出样式文件和图片之后，通过 @extend 或者直接使用都可以。
 
 ## 参数
 ### src
 - 类型：Array
-- 说明：图片路径，通过 [glob](https://github.com/isaacs/node-glob) 模块命中文件，语法见 [中文文档](http://www.cnblogs.com/liulangmao/p/4552339.html)
+- 说明：图片路径，通过 [node-glob](https://github.com/isaacs/node-glob) 模块命中文件
 - 默认：['./components/images/sprites-*.png']
 
 ### image
@@ -122,7 +129,7 @@ module.exports = [{
 
 ### tmpl
 - 类型：String
-- 说明：输出样式文件或者 js 对象格式的模板文件路径。可用的变量有 `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. 使用 ES6 template 的语法。
+- 说明：输出样式文件或者 js 对象格式的模板文件路径。可用的变量有 `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`。使用 ES6 template 的语法。
 - 默认：''
 
 ### wrap

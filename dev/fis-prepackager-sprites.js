@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (ret, conf, settings, opt) {
-    var Sprite = require('../lib/sprites.com.js').default;
+    var Sprite = require('../main').default;
 
     var sprite = new Sprite();
 

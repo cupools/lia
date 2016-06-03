@@ -5,10 +5,10 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "babel": "babel lib/sprites.js -o lib/sprites.com.js --presets es2015 -w"
+    "babel": "babel src -d lib -D --presets es2015 -w"
   },
   "bin": {
-    "sprites": "./bin/sprites.js"
+    "sprites": "./bin/sprites"
   },
   "keywords": [
     "sprite"
@@ -16,6 +16,8 @@
   "author": "liyh",
   "license": "MIT",
   "dependencies": {
+    "chokidar": "^1.5.1",
+    "colors": "^1.1.2",
     "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
