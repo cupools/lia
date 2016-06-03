@@ -143,12 +143,23 @@ class Sprite {
 
     _getTemplate() {
         let tmpl = '';
-        try {
-            tmpl = fs.readFileSync(path.resolve(process.cwd(), this.options.tmpl), 'utf-8');
-        } catch(e) {
-            log.warn(`\`${this.options.tmpl}\` not found.`);
-            tmpl = fs.readFileSync(path.resolve(__dirname, './tmpl/sprites.tmpl'), 'utf-8');
+        let tmplPath = '';
+        let opt = this.options;
+        let defaultPath = path.resolve(__dirname, './tmpl/sprites.tmpl');
+
+        if(opt.tmpl) {
+            tmplPath = path.resolve(process.cwd(), opt.tmpl);
+        } else {
+            tmplPath = defaultPath;
         }
+
+        try {
+            tmpl = fs.readFileSync(tmplPath, 'utf-8');
+        } catch(e) {
+            log.warn(`\`${opt.tmpl}\` not found.`);
+            tmpl = fs.readFileSync(defaultPath, 'utf-8');
+        }
+
         return tmpl;
     }
 
