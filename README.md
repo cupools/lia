@@ -14,28 +14,31 @@ $ sprites -h
 
 Usage: 
 
-sprites            build sprite images and variables follow sprites_conf.js
-sprites init       create sprites_conf.js
-sprites now        build sprite images in current directory
+sprites              Build sprite images and variables follow sprites_conf.js
+sprites init         Create sprites_conf.js
+sprites now          Build sprite images in current directory
+sprites -w, watch    Rebuild sprite images and variables on changes
+sprites -h, help     Output usage information
 ```
-### 基础使用
+
+第一次使用，需要初始化配置文件，而后再根据配置文件内容产出图片和样式文件
 
 ```bash
 $ sprites init
-    [build]: sprites_conf.js done.
+[info]: Created sprites_conf.js
 $ sprites
-    [build]: ./components/sprites/sprites.png
-    [build]: ./components/sprites/sprites.scss
+[info]: Created ./components/sprites/sprites.png
+[info]: Created ./components/sprites/sprites.scss
 ```
 
-其中，配置文件 sprites_conf.js 的内容如下：
+其中，初始化配置文件 sprites_conf.js 的内容如下：
 
 ```js
 module.exports = [{
     src: ['./components/images/*.png'],
     image: './components/sprites/sprites.png',
     style: './components/sprites/sprites.scss',
-    prefix: 'sp-',
+    prefix: 'sprites-',
     cssPath: './',
     unit: 'rem',
     convert: 100,
@@ -50,36 +53,156 @@ module.exports = [{
 输出的 sprites.scss 内容如下：
 
 ```css
-.sp-body {
-    width: 1.3rem;
-    height: 1.3rem;
+.sprites-bird {
+    width: 1.31rem;
+    height: 2.1rem;
     background: url(./sprites.png) no-repeat;
-    background-size: 2.7rem 2.7rem;
+    background-size: 4.51rem 2.19rem;
+    background-position: -1.79rem 0rem;
+}
+.sprites-cat {
+    width: 1.31rem;
+    height: 1.78rem;
+    background: url(./sprites.png) no-repeat;
+    background-size: 4.51rem 2.19rem;
+    background-position: -3.2rem 0rem;
+}
+.sprites-cow {
+    width: 1.69rem;
+    height: 2.19rem;
+    background: url(./sprites.png) no-repeat;
+    background-size: 4.51rem 2.19rem;
     background-position: 0rem 0rem;
-}
-.sp-foot {
-    width: 1.3rem;
-    height: 1.3rem;
-    background: url(./sprites.png) no-repeat;
-    background-size: 2.7rem 2.7rem;
-    background-position: -1.4rem 0rem;
-}
-.sp-hand {
-    width: 1.3rem;
-    height: 1.3rem;
-    background: url(./sprites.png) no-repeat;
-    background-size: 2.7rem 2.7rem;
-    background-position: 0rem -1.4rem;
 }
 ```
 
-在输出样式文件和图片之后，通过 @extend 或者直接使用都可以。
+![sprites demo](docs/sprites.png)
+
+在得到样式文件和图片之后，通过 @extend 或者直接使用随意。
+
+## 示例
+
+### 1. 直接产出组帧图片
+```bash
+$ sprites now
+[info]: Created sprites-keyframes.png
+```
+当前文件夹的所有图片
+
+![sprite icon](docs/01.png) ![+](docs/plus.png)
+![sprite icon](docs/02.png) ![+](docs/plus.png)
+![sprite icon](docs/03.png)
+
+输出为 `top-down` 布局的精灵图，间距10px
+
+![sprite keyframes](docs/sprites-keyframes.png)
+
+### 2. 监听变动
+```js
+module.exports = [{
+    src: ['animal/*.png'],
+    image: './sprites/sp-animal.png',
+    style: './sprites/sp-animal.scss',
+    cssPath: './',
+    unit: 'px',
+}, {
+    src: ['icon/*.png'],
+    image: './sprites/sp-icon.png',
+    style: './sprites/sp-icon.scss',
+    cssPath: './',
+    unit: 'px',
+}];
+```
+
+```bash
+$ sprites -w
+[info]: Created ./sprites/sp-animal.png
+[info]: Created ./sprites/sp-animal.scss
+[info]: Created ./sprites/sp-icon.png
+[info]: Created ./sprites/sp-icon.scss
+[info]: Finish in 1.217s. Waiting...
+[info]: Created ./sprites/sp-animal.png
+[info]: Created ./sprites/sp-animal.scss
+[info]: Finish in 0.532s. Waiting...
+```
+
+### 3. 自定义模板
+
+Sprites 允许通过自定义模板输出各种类型的文件，可以是 js, json 等等等，而不局限于 css, scss, 以此满足 canvas 动画和其他各种使用场景。
+
+配置文件
+
+```js
+// sprites_conf.js
+module.exports = [{
+    src: ['./components/images/*.png'],
+    image: './components/sprites/sprites.png',
+    style: './components/sprites/sprites.js',
+    unit: 'px',
+    tmpl: './obj.tmpl',
+    wrap: 'module.exports={name: \'${imageName}\', totalWidth: ${totalWidth}, totalHeight: ${totalWidth}, data: [${content}]}'
+}];
+```
+
+模板文件
+
+```js
+// obj.tmpl
+{
+    name: '${name}',
+    width: ${width},
+    height: ${height},
+    offset: {
+        x: ${x},
+        y: ${y}
+    }
+},
+```
+
+运行命令
+
+```bash
+$ sprites
+[info]: Created ./components/sprites/sprites.png
+[info]: Created ./components/sprites/sprites.js
+```
+
+输出文件
+
+```js
+// sprites.js
+module.exports={name: 'sprites.png', totalWidth: 451, totalHeight: 451, data: [{
+    name: 'bird',
+    width: 131,
+    height: 210,
+    offset: {
+        x: 179,
+        y: 0
+    }
+},{
+    name: 'cat',
+    width: 131,
+    height: 178,
+    offset: {
+        x: 320,
+        y: 0
+    }
+},{
+    name: 'cow',
+    width: 169,
+    height: 219,
+    offset: {
+        x: 0,
+        y: 0
+    }
+},]}
+```
 
 ## 参数
 ### src
 - 类型：Array
 - 说明：图片路径，通过 [node-glob](https://github.com/isaacs/node-glob) 模块命中文件
-- 默认：['./components/images/sprites-*.png']
+- 默认：['./components/images/*.png']
 
 ### image
 - 类型：String
@@ -108,7 +231,7 @@ module.exports = [{
 
 ### convert
 - 类型：Number
-- 说明：rem 与 px 的转换大小
+- 说明：rem 与 px 的转换大小，只在 unit 为 'rem' 的情况下有效
 - 默认：100
 
 ### blank
@@ -134,10 +257,11 @@ module.exports = [{
 
 ### wrap
 - 类型：String
-- 说明：弥补 `tmpl` 参数的不足，类似 <code>module.exports=[${content}];</code>。可用的变量有 `content`, 使用 ES6 template 的语法。
+- 说明：弥补 `tmpl` 参数的不足，类似 <code>module.exports=[${content}];</code>。可用的变量有 `content`, `totalWidth`, `totalHeight`, `imageName`, 使用 ES6 template 的语法。
 - 默认：''
 
 ## 更新日志
-- v0.1.2: 添加 `sprites now` 命令，在当前目录中匹配所有 .png 图片并输出 `top-down` 布局的精灵图，不输出样式文件
+- v0.2.1: 添加 `sprites watch` 命令，允许监听文件改动
+- v0.1.2: 添加 `sprites now` 命令，在当前目录中匹配所有 .png 图片并输出 `top-down` 布局的精灵图，不输出样式文件；修复滚雪球 bug
 - v0.1.1: 添加 `tmpl` 和 `wrap` 参数，允许产出 json 及其他任意类型的精灵图数据格式
 - v0.0.1: 基本功能

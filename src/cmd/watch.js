@@ -33,60 +33,72 @@ class Task {
     }
 }
 
-let tasks = [];
-let pond = [];
-
 const wait = 1000;
 
-function main() {
-    let config = [];
-    let ignores = [];
-    let confPath = path.resolve(process.cwd(), 'sprites_conf.js');
+let watching = {
+    tasks: [],
+    pond: [],
+    ignores: [],
+    main() {
+        let config = [];
+        let confPath = path.resolve(process.cwd(), 'sprites_conf.js');
 
-    try {
-        config = require(confPath);
-    } catch (e) {
-        log.warn('sprites_conf.js not found or something wrong. Try `sprites init`.');
+        try {
+            config = require(confPath);
+        } catch (e) {
+            log.warn('sprites_conf.js not found or something wrong. Try `sprites init`.');
+        }
+
+        config.map(conf => {
+            let sprites = new Sprites(conf);
+            let task = new Task(sprites);
+
+            this.tasks.push(task);
+            this.ignores.push(sprites._name(conf.image));
+        });
+
+        this.watch();
+    },
+    watch() {
+        let timer = null;
+        let pond = this.pond;
+        let ignores = this.ignores.join('|');
+        let ignored = new RegExp(ignores);
+
+        chokidar.watch('**/*.png', {
+            awaitWriteFinish: true,
+            ignored
+        }).on('all', (event, p) => {
+            pond.push(p);
+
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                this.monitor();
+            }, wait);
+        });
+    },
+    monitor() {
+        let start = +new Date();
+        let tasks = this.tasks;
+        let pond = this.pond;
+
+        tasks.map(t => t.update());
+
+        while(pond.length) {
+            let p = pond.shift();
+            let realPath = path.resolve(process.cwd(), p);
+
+            tasks.map(t => !t.todo && t.check(realPath));
+        }
+
+        tasks.map(t => t.run());
+
+        let end = +new Date();
+
+        log.info(`Finish in ${(end - start) / 1000}s. Waiting...`);
     }
-
-    config.map(conf => {
-        let sprites = new Sprites(conf);
-        let task = new Task(sprites);
-        tasks.push(task);
-
-        ignores.push(sprites._name(conf.image));
-    });
-
-    let timer = null;
-
-    chokidar.watch('**/*.png', {
-        awaitWriteFinish: true,
-        ignored: new RegExp(ignores.join('|'))
-    }).on('all', (event, p) => {
-        pond.push(p);
-
-        clearTimeout(timer);
-        timer = setTimeout(monitor, wait);
-    });
 }
 
-function monitor() {
-    let start = +new Date();
-
-    tasks.map(t => t.update());
-
-    while(pond.length) {
-        let p = pond.shift();
-        let realPath = path.resolve(process.cwd(), p);
-
-        tasks.map(t => !t.todo && t.check(realPath));
-    }
-
-    tasks.map(t => t.run());
-
-    let end = +new Date();
-
-    log.info(`Finish in ${(end - start) / 1000}s. Waiting...`);
+export default function() {
+    watching.main();
 }
-
-export default main;

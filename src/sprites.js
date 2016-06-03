@@ -44,10 +44,10 @@ class Sprite {
             return false;
         }
 
-        if(this.options.image) {
+        if(opt.image) {
             this._buildImage(result);
         }
-        if(this.options.style) {
+        if(opt.style) {
             this._outputStyle(result);
         }
     }
@@ -79,10 +79,11 @@ class Sprite {
         }
 
         let content = store.join('');
-        let wrap = this.options.wrap;
+        let wrap = opt.wrap;
 
         if(wrap) {
-            content = template(wrap, {content});
+            let imageName = this._basename(opt.image);
+            content = template(wrap, {content, totalWidth, totalHeight, imageName});
         }
 
         this.outputStyle({
@@ -145,6 +146,7 @@ class Sprite {
         try {
             tmpl = fs.readFileSync(path.resolve(process.cwd(), this.options.tmpl), 'utf-8');
         } catch(e) {
+            log.warn(`\`${this.options.tmpl}\` not found.`);
             tmpl = fs.readFileSync(path.resolve(__dirname, './tmpl/sprites.tmpl'), 'utf-8');
         }
         return tmpl;
