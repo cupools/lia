@@ -117,7 +117,7 @@ class Sprite {
         let name = this._name(originPath);
         let selector = this.options.prefix + name;
 
-        if(unit === 'rem' && convert) {
+        if(convert) {
             width = (width + blank) / convert;
             height = (height + blank) / convert;
             totalWidth = totalWidth / convert;
