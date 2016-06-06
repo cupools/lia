@@ -231,7 +231,7 @@ module.exports={name: 'sprites.png', totalWidth: 451, totalHeight: 451, data: [{
 
 ### convert
 - 类型：Number
-- 说明：单位缩放倍数，可以是 px 和 rem 的转换大小，也可以是 Retina 情况下的两倍大小
+- 说明：单位缩放倍数，可以是 px 和 rem 的转换大小，也可以是 Retina 情况下的缩放大小
 - 默认：100
 
 ### blank
