@@ -1,10 +1,9 @@
-# Sprites
-根据配置输出精灵图和对应的样式文件，__支持 rem 和 px__, 支持快速合并精灵图
+# Lia
 
-## 安装
+## Get started
 
 ```bash
-npm i -g git+ssh://git@git.ucweb.local:lyh106415/sprites.git
+npm i -g lia
 ```
 
 ## 使用
