@@ -11,8 +11,8 @@ switch(command) {
     case 'init':
         require('../lib/cmd/init').default();
         break;
-    case 'now':
-        require('../lib/cmd/now').default();
+    case 'here':
+        require('../lib/cmd/here').default();
         break;
     case '-w':
     case 'watch':

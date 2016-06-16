@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/sprites.js').default;
+module.exports = require('./lib/lia.js').default;

@@ -2,7 +2,7 @@
 
 import chokidar from 'chokidar';
 import path from 'path';
-import Sprites from '../sprites';
+import Sprites from '../lia';
 import log from '../utils/log';
 
 class Task {
@@ -41,12 +41,12 @@ let watching = {
     ignores: [],
     main() {
         let config = [];
-        let confPath = path.resolve(process.cwd(), 'sprites_conf.js');
+        let confPath = path.resolve(process.cwd(), 'sprite_conf.js');
 
         try {
             config = require(confPath);
         } catch (e) {
-            log.warn('sprites_conf.js not found or something wrong. Try `sprites init`.');
+            log.warn('sprite_conf.js not found or something wrong. Try `sprites init`.');
         }
 
         config.map(conf => {

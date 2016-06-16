@@ -1,6 +1,6 @@
 'use strict';
 
-import Sprites from '../sprites';
+import Sprites from '../lia';
 import path from 'path';
 
 export default function () {

@@ -10,13 +10,13 @@ import log from './utils/log';
 class Sprite {
     constructor(options) {
         this.options = Object.assign({
-            src: ['./components/images/sprites-*.png'],
-            image: './components/sprites/sprites.png',
-            style: './components/sprites/sprites.scss',
-            prefix: 'sprites-',
+            src: ['**/sprite-*.png'],
+            image: 'build/sprite.png',
+            style: 'build/sprite.css',
+            prefix: '',
             cssPath: './',
-            unit: 'rem',
-            convert: 100,
+            unit: 'px',
+            convert: 1,
             blank: 0,
             padding: 10,
             algorithm: 'binary-tree',
@@ -32,7 +32,7 @@ class Sprite {
         let opt = this.options;
 
         if(!sprites.length) {
-            log.warn(`No images mapped for \`${opt.src}\`, check sprites_conf.js.`);
+            log.warn(`No images mapped for \`${opt.src}\``);
             return false;
         }
 
@@ -145,7 +145,7 @@ class Sprite {
         let tmpl = '';
         let tmplPath = '';
         let opt = this.options;
-        let defaultPath = path.resolve(__dirname, './tmpl/sprites.tmpl');
+        let defaultPath = path.resolve(__dirname, './tmpl/sprite.tmpl');
 
         if(opt.tmpl) {
             tmplPath = path.resolve(process.cwd(), opt.tmpl);
