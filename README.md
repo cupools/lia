@@ -155,7 +155,7 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### tmpl
 - type: `String`
-- desc: the path of template file, which is used to output not only stylesheet file. The variables are acceptable as follow: `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`。Uses ES6 template.
+- desc: the path of template file, which is used to output not only stylesheet file. The variables are acceptable as follow: `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. Uses ES6 template.
 - default: ''
 
 ### wrap
