@@ -4,8 +4,6 @@
 
 如果你更倾向于基于样式文件创建精灵图片，也许你会喜欢 [Emilia](https://github.com/cupools/emilia)
 
-[English Doc](./README.md)
-
 ## 特点
 - 支持 `rem` 和数值大小转换
 - 支持一次性输出多个精灵图片和样式文件
