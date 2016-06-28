@@ -4,6 +4,8 @@
 
 If you are tend to build sprite pictures according to stylesheet, maybe you like [Emilia](https://github.com/cupools/emilia).
 
+[中文文档](README.zn-CN.md)
+
 ## Features
 - Supports `rem` as well as numerical conversion.
 - Output multiple sprite pictures and stylesheet files in once time.
