@@ -1,19 +1,17 @@
 # Lia
 
-`Lia` finds image resources according to `sprite_conf.js`, then builds sprite pictures and output stylesheet files to specify directory.
+`Lia` 通过 `sprite_conf.js` 的配置命中图片资源，然后输出精灵图片和样式文件到指定文件夹。
 
-If you are tend to build sprite pictures according to stylesheet, maybe you like [Emilia](https://github.com/cupools/emilia).
+如果你更倾向于基于样式文件创建精灵图片，也许你会喜欢 [Emilia](https://github.com/cupools/emilia)
 
-[中文文档](README.zh-CN.md)
+## 特点
+- 支持 `rem` 和数值大小转换
+- 支持一次性输出多个精灵图片和样式文件
+- 支持监听文件改动并按需编译
+- 支持在当前文件夹快速创建精灵图片，可用于创建组帧图片的场景
+- 支持自定义模板输出图片坐标信息，可以是 SCSS, JSON, JS 或者任意格式类型
 
-## Features
-- Supports `rem` as well as numerical conversion.
-- Output multiple sprite pictures and stylesheet files in once time.
-- Monitor file changes and incremental recompilation.
-- Create sprites picture in current folder easily. May be useful for css keyframes animation.
-- Support custom template for stylesheet file. It means scss, json and any format you want can be outputed.
-
-## Get started
+## 使用
 
 #### Step 0
 ```bash
@@ -49,9 +47,9 @@ $ lia
 [info]: Created build/sprite.css
 ```
 
-And it works.
+然后就搞定啦。
 
-What we should be care about is `sprite_conf.js`. When `lia init`, it looks like:
+我们在这个过程中需要关注的只有 `sprite_conf.js`。当执行 `lia init`，初始化配置如下：
 
 ```js
 // sprite_conf.js
@@ -71,7 +69,7 @@ module.exports = [{
 }];
 ```
 
-And in the example above, it results in:
+在上面的示例中，输出的样式文件和精灵图片如下：
 
 ```css
 /* build/sprite.css */
@@ -100,81 +98,80 @@ And in the example above, it results in:
 
 ![sprites demo](docs/sprites.png)
 
-Having get those stylesheet files and sprite pictures, you can use it through `@extend` or directly use the selector. Whatever you like.
+在得到了样式文件和精灵图片之后，可以通过 `@extend` 或者直接通过选择器使用。
 
-
-## Parameter
+## 参数
 ### src
-- type: `Array`
-- desc: origin image path, use [glob-patterns](https://github.com/isaacs/node-glob)
-- default: ['\*\*/sprite-*.png']
+- 类型: `Array`
+- 描述: 图片路径, 使用 [glob-patterns](https://github.com/isaacs/node-glob)
+- 默认: ['\*\*/sprite-*.png']
 
 ### image
-- type: `String`
-- desc: sprite picture output path
-- default: 'build/sprite.png'
+- 类型: `String`
+- 描述: 精灵图片的输出路径
+- 默认: 'build/sprite.png'
 
 ### style
-- type: `String`
-- desc: stylesheet file path, can be like `css`, `scss`, or with [tmpl](#tmpl) and [wrap](#wrap) to be `js`, `json`, any format.
-- default: 'build/sprite.css'
+- 类型: `String`
+- 描述: 样式文件的输出路径，可以是 `css`, `scss`，也可以配合 [tmpl](#tmpl) 和 [wrap](#wrap) 输出 `js`, `json` 或者其他任意格式类型的文件
+- 默认: 'build/sprite.css'
 
 ### prefix
-- type: `String`
-- desc: selector prefix
-- default: ''
+- 类型: `String`
+- 描述: 选择器前缀
+- 默认: ''
 
 ### cssPath
-- type: `String`
-- desc: image url path
-- default: '../images/'
+- 类型: `String`
+- 描述: 图片的 url 前缀
+- 默认: '../images/'
 
 ### unit
-- type: `String`
-- desc: css unit
-- default: 'px'
+- 类型: `String`
+- 描述: CSS 使用的单位
+- 默认: 'px'
 
 ### convert
-- type: `Number`
-- desc: numerical scale. Useful in `rem` and Retina pictures.
-- default: 1
+- 类型: `Number`
+- 描述: 缩放的数值大小，可以用在 `rem` 或者 Retina 场景
+- 默认: 1
 
 ### blank
-- type: `Number`
-- desc: Create space in the edge of background container to avoid `rem` decimal calculation problem, which is common to cause background incomplete.
-- default: 0
+- 类型: `Number`
+- 描述: 在背景图的边缘留一点空白，避免 `rem` 小数值计算造成的图片显示不全的问题
+- 默认: 0
 
 ### padding
-- type: `Number`
-- desc: padding between images
-- default: 10
+- 类型: `Number`
+- 描述: 图片之间的间距
+- 默认: 10
 
 ### algorithm
-- type: `String`
-- desc: layout algorithm of sprite pictures
+- 类型: `String`
+- 描述: 精灵图片的排序算法
 - value: ['top-down' | 'left-right' | 'diagonal' | 'alt-diagonal' | 'binary-tree']
-- default: 'binary-tree'
+- 默认: 'binary-tree'
 
 ### tmpl
-- type: `String`
-- desc: the path of template file, which is used to output not only stylesheet file. The variables are acceptable as follow: `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. Uses ES6 template.
-- default: ''
+- 类型: `String`
+- 描述: 模板文件的路径，用来输出各种格式类型的文件。其中可用的变量有：`name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`。使用 ES6 template 语法
+- 默认: ''
 
 ### wrap
-- type: `String`
-- desc: a string that make up for deficiencies in [tmpl](#tmpl), such as <code>module.exports=[${content}];</code>. The variables are acceptable as follow: `content`, `totalWidth`, `totalHeight`, `imageName`. Uses ES6 template.
-- default: ''
+- 类型: `String`
+- 描述: 用来弥补 [tmpl](#tmpl) 的不足的字符串, 比如 <code>module.exports=[${content}];</code>。其中可用的变量有：`content`, `totalWidth`, `totalHeight`, `imageName`。使用 ES6 template 语法
+- 默认: ''
 
-## Example
+## 示例
 
-### Easily build sprite pictures in current directory
+### 在当前文件夹快速创建精灵图片
 
 ```bash
 $ lia here
 [info]: Created sprite-keyframes.png
 ```
 
-All the pictures in current directory will be output as a sprite picture in `top-down` layout, with padding `10`. It does not output stylesheet file.
+当前文件夹中的所有图片将会被合并输出一张精灵图片，使用 `top-down` 排序，padding 为 10。不输出样式文件。
 
 From:
 
@@ -186,8 +183,8 @@ To:
 
 ![sprite keyframes](docs/sprites-keyframes.png)
 
-### 2. Monitor file change
-The `sprite_conf.js` look like this.
+### 2. 监听文件变动
+`sprite_conf.js` 的内容如下：
 
 ```js
 // sprite_conf
@@ -206,7 +203,7 @@ module.exports = [{
 }];
 ```
 
-And when run `lia watch`, it runs like this.
+执行 `lia watch`，结果如下：
 
 ```bash
 $ lia -w
@@ -220,11 +217,11 @@ $ lia -w
 [info]: Finish in 0.532s. Waiting...
 ```
 
-### 3. Custom template
+### 3. 自定义模板
 
-`Lia` supports output any format files with sprite coordinates by custom template. It may be helpful in canvas animation and other usage scenarios.
+`Lia` 支持将精灵图的坐标信息通过自定义模板输出为任意格式的文件。这个功能在 Canvas 动画或者其他使用场景可能会有帮助。
 
-`sprite_conf.js` as follow.
+`sprite_conf.js` 配置如下：
 
 ```js
 // sprite_conf.js
@@ -238,7 +235,7 @@ module.exports = [{
 }];
 ```
 
-Template file `obj.tmpl` as follow.
+模板文件 `obj.tmpl` 如下：
 
 ```js
 // obj.tmpl
@@ -253,7 +250,7 @@ Template file `obj.tmpl` as follow.
 },
 ```
 
-Run in CLI.
+在 CLI 中执行：
 
 ```bash
 $ lia
@@ -261,7 +258,7 @@ $ lia
 [info]: Created build/sprite.js
 ```
 
-It will output `sprite.js` and `sprite.png` as follow.
+最终会输出 `sprite.js` 和 `sprite.png` 如下：
 
 ```js
 // sprite.js
@@ -292,19 +289,19 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 },]}
 ```
 
-## Update
+## 更新日志
 - v1.0.0
-    - Rename from `Sprites` to `Lia`
-    - Adjust default options
+    - 由 `Sprites` 更名为 `Lia`
+    - 调整默认参数配置
 - v0.2.1
-    - Add command `watch`, which be abled to monitor file changes
+    - 添加 `watch` 命令，允许监听文件改动
 - v0.1.2
-    - Add command `now` which named `here` currently, which be abled to build sprite picture in current folder
-    - Fix snowball bug, sprite picture will be filter in compilation
+    - 添加 `here` 命令 (之前名为 `now`)，允许在当前文件夹快速创建精灵图
+    - 修复滚雪球 Bug, 在编译中排除产出的精灵图片
 - v0.1.1
-    - Add parameter `tmpl` and `wrap`, which be abled to output json and any format file with sprit coordinats
+    - 增加 `tmpl` 和 `wrap` 参数，允许将精灵图片的坐标信息输出为任意格式类型的文件
 - v0.0.1: 
-    - Basic functions
+    - 基本功能
 
 ## License
 
