@@ -1,6 +1,6 @@
 {
     "name": "lia",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Sprite tool, bases on sprcify pictures, builds both sprite pictures and stylesheet files",
     "main": "main.js",
     "bin": {
