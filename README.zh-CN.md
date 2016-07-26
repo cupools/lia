@@ -290,6 +290,9 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## 更新日志
+- v1.1.0
+    - 修复了 Windows 平台下由于 `child_process.execFileSync` 的不恰当的使用导致的致命 Bug
+    - 增加单元测试用例
 - v1.0.0
     - 由 `Sprites` 更名为 `Lia`
     - 调整默认参数配置

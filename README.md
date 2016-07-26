@@ -13,7 +13,7 @@ If you are tend to build sprite pictures according to stylesheet, maybe you like
 - Create sprites picture in current folder easily. May be useful for css keyframes animation.
 - Support custom template for stylesheet file. It means scss, json and any format you want can be outputed.
 
-## Get started
+## Getting started
 
 #### Step 0
 ```bash
@@ -293,6 +293,9 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## Update
+- v1.1.0
+    - Fix fatal bug cause by incorrect usage of `child_process.execFileSync` in windows
+    - Add unit test
 - v1.0.0
     - Rename from `Sprites` to `Lia`
     - Adjust default options
