@@ -1,25 +1,29 @@
-'use strict';
+import colors from 'colors'
 
-import colors from 'colors';
+let state = true
 
 let log = function(msg) {
-    console.log(msg);
-};
+    state && console.log(msg)
+}
 
 log.info = function(msg) {
-    console.log('[info]: ' + msg);
-};
+    log('[info]: ' + msg)
+}
 
 log.warn = function(msg) {
-    console.log('[warn]: ' + colors.yellow(msg));
-};
+    log('[warn]: ' + colors.yellow(msg))
+}
 
 log.error = function(msg) {
-    console.log('[error]: ' + colors.red(msg));
-};
+    log('[error]: ' + colors.red(msg))
+}
 
 log.build = function(msg) {
-    log.info('Created ' + colors.green(msg));
-};
+    log.info('Created ' + colors.green(msg))
+}
 
-export default log;
+log.state = function(quiet) {
+    state = !quiet
+}
+
+export default log

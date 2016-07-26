@@ -1,8 +1,6 @@
-'use strict';
+import log from '../utils/log'
 
-import log from '../utils/log';
-
-export default function () {
+export default function() {
     let usage = [
         '',
         '  Usage: lia [command]',
@@ -14,7 +12,7 @@ export default function () {
         '    -w, watch              Monitor file changes and incremental recompilation',
         '    -h, help               Output usage information',
         ''
-    ].join('\n');
+    ].join('\n')
 
-    log(usage);
+    log(usage)
 }

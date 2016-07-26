@@ -1,45 +1,46 @@
 {
-    "name": "lia",
-    "version": "1.0.1",
-    "description": "Sprite tool, bases on sprcify pictures, builds both sprite pictures and stylesheet files",
-    "main": "main.js",
-    "bin": {
-        "lia": "./bin/lia"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "babel": "babel src -d lib -D --presets es2015 -w"
-    },
-    "author": "liyh <cupools@gmail.com>",
-    "license": "MIT",
-    "directories": {
-        "doc": "docs",
-        "test": "test"
-    },
-    "dependencies": {
-        "chokidar": "^1.5.1",
-        "colors": "^1.1.2",
-        "es6-template-strings": "^2.0.0",
-        "fs-extra": "^0.30.0",
-        "glob": "^7.0.3",
-        "spritesmith": "^3.1.0"
-    },
-    "devDependencies": {
-        "babel-cli": "^6.9.0",
-        "babel-preset-es2015": "^6.9.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/cupools/lia"
-    },
-    "bugs": {
-        "url": "https://github.com/cupools/lia/issues"
-    },
-    "homepage": "https://github.com/cupools/lia",
-    "keywords": [
-        "sprite",
-        "image",
-        "spritesheet",
-        "css"
-    ]
+  "name": "lia",
+  "version": "1.0.1",
+  "description": "Sprite tool, bases on sprcify pictures, builds both sprite pictures and stylesheet files",
+  "main": "main.js",
+  "bin": {
+    "lia": "./bin/lia"
+  },
+  "scripts": {
+    "test": "mocha test/",
+    "babel": "babel src -d lib -D --presets es2015 -w"
+  },
+  "author": "liyh <cupools@gmail.com>",
+  "license": "MIT",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "chokidar": "^1.5.1",
+    "colors": "^1.1.2",
+    "es6-template-strings": "^2.0.0",
+    "fs-extra": "^0.30.0",
+    "glob": "^7.0.3",
+    "spritesmith": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "mocha": "^2.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cupools/lia"
+  },
+  "bugs": {
+    "url": "https://github.com/cupools/lia/issues"
+  },
+  "homepage": "https://github.com/cupools/lia",
+  "keywords": [
+    "sprite",
+    "image",
+    "spritesheet",
+    "css"
+  ]
 }
