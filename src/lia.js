@@ -115,14 +115,14 @@ class Sprite {
 
     outputStyle({outputPath, content, opt}) {
         try {
-            fs.outputFile(outputPath, content, 'utf8')
+            fs.outputFileSync(outputPath, content, 'utf8')
             log.build(opt.style)
         } catch (e) {
             log.error(e.message)
         }
     }
 
-    _render(originPath, {width, height, x, y} , {totalWidth, totalHeight}) {
+    _render(originPath, {width, height, x, y}, {totalWidth, totalHeight}) {
         let {unit, convert, cssPath, image, blank} = this.options
         let imageName = this._basename(image)
         let name = this._name(originPath)
