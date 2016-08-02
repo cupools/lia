@@ -1,5 +1,7 @@
 # Lia
 
+[![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
+
 `Lia` finds image resources according to `sprite_conf.js`, then builds sprite pictures and output stylesheet files to specify directory.
 
 If you are tend to build sprite pictures according to stylesheet, maybe you like [Emilia](https://github.com/cupools/emilia).

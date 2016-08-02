@@ -1,5 +1,7 @@
 # Lia
 
+[![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
+
 `Lia` 通过 `sprite_conf.js` 的配置命中图片资源，然后输出精灵图片和样式文件到指定文件夹。
 
 如果你更倾向于基于样式文件创建精灵图片，也许你会喜欢 [Emilia](https://github.com/cupools/emilia)
