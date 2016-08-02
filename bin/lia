@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-let command = process.argv[2]
-
+var command = process.argv[2]
 switch (command) {
     case '-h':
     case 'help':
