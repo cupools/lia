@@ -295,6 +295,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## Update
+- v1.1.1
+    - Update for Node v0.12 support
 - v1.1.0
     - Fix fatal bug cause by incorrect usage of `child_process.execFileSync` in windows
     - Add unit test

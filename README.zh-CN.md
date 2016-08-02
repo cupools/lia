@@ -292,6 +292,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## 更新日志
+- v1.1.1
+    - 兼容 Node v0.12
 - v1.1.0
     - 修复了 Windows 平台下由于 `child_process.execFileSync` 的不恰当的使用导致的致命 Bug
     - 增加单元测试用例
