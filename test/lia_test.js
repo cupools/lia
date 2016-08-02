@@ -1,4 +1,4 @@
-/* global describe,it,before,after */
+/* eslint-env mocha */
 
 'use strict'
 
@@ -31,8 +31,8 @@ describe('Different Options', function() {
                     padding: 10,
                     algorithm: 'binary-tree',
                     tmpl: '',
-                    wrap: '',
-                    quiet: true
+                    wrap: ''
+                    // quiet: true
                 })
                 lia.run()
             }, 'should run without exception')
