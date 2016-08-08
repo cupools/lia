@@ -1,8 +1,8 @@
 import glob from 'glob'
 import path from 'path'
 import fs from 'fs-extra'
-import child from 'child_process'
 import template from 'es6-template-strings'
+import image from './utils/image'
 import log from './utils/log'
 
 class Sprite {
@@ -36,23 +36,24 @@ class Sprite {
             return false
         }
 
-        let ret = child.spawnSync('node', [path.join(__dirname, 'spritesmith.js'), '-sprites', JSON.stringify(sprites), '-options', JSON.stringify(opt)], {
-            encoding: 'utf8'
-        })
+        image.process(sprites, opt)
+        // let ret = child.spawnSync('node', [path.join(__dirname, 'spritesmith.js'), '-sprites', JSON.stringify(sprites), '-options', JSON.stringify(opt)], {
+        //     encoding: 'utf8'
+        // })
 
-        if (ret.stderr) {
-            log.error(ret.stderr)
-            return false
-        }
+        // if (ret.stderr) {
+        //     log.error(ret.stderr)
+        //     return false
+        // }
 
-        let result = JSON.parse(ret.stdout.toString())
+        // let result = JSON.parse(ret.stdout.toString())
 
-        if (opt.image) {
-            this._buildImage(result)
-        }
-        if (opt.style) {
-            this._outputStyle(result)
-        }
+        // if (opt.image) {
+        //     this._buildImage(result)
+        // }
+        // if (opt.style) {
+        //     this._outputStyle(result)
+        // }
     }
 
     _buildImage({image}) {

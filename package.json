@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha test/ --compilers js:babel-core/register",
-    "babel": "babel src -d lib -D --presets es2015 -w"
+    "dev": "babel src -d lib -D --presets es2015 -w"
   },
   "author": "liyh <cupools@gmail.com>",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
-    "spritesmith": "^3.1.0"
+    "images": "^3.0.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
