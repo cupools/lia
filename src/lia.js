@@ -49,10 +49,9 @@ class Sprite {
     _buildImage({image}) {
         let opt = this.options
         let outputPath = this._resolvePath(opt.image)
-        let content = new Buffer(image)
 
         this.outputImage({
-            content,
+            image,
             outputPath,
             opt
         })
@@ -65,15 +64,13 @@ class Sprite {
         let totalWidth = properties.width
         let totalHeight = properties.height
 
-        for (let originPath in coordinates) {
-            if (coordinates.hasOwnProperty(originPath)) {
-                let payload = coordinates[originPath]
-                store.push(this._render(originPath, payload, {
-                    totalWidth,
-                    totalHeight
-                }))
-            }
-        }
+        Object.keys(coordinates).map(originPath => {
+            let payload = coordinates[originPath]
+            store.push(this._render(originPath, payload, {
+                totalWidth,
+                totalHeight
+            }))
+        })
 
         let content = store.join('')
         let wrap = opt.wrap
@@ -95,9 +92,9 @@ class Sprite {
         })
     }
 
-    outputImage({outputPath, content, opt}) {
+    outputImage({outputPath, image, opt}) {
         try {
-            fs.outputFileSync(outputPath, content, 'binary')
+            image.save(outputPath, 'png')
             log.build(opt.image)
         } catch (e) {
             log.error(e.message)
@@ -119,7 +116,7 @@ class Sprite {
         let name = this._name(originPath)
         let selector = this.options.prefix + name
 
-        if (convert) {
+        if (convert !== 1) {
             width = (width + blank) / convert
             height = (height + blank) / convert
             totalWidth = totalWidth / convert

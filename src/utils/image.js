@@ -18,6 +18,7 @@ export default {
                 width: size.width + padding,
                 height: size.height + padding
             })
+
             layer.addItem(item)
         })
 
@@ -27,11 +28,11 @@ export default {
         height -= padding
 
         let sprite = Images(width, height)
+        let coordinates = {}
         let properties = {
             width,
             height
         }
-        let coordinates = {}
 
         items.map(item => {
             let {file, img, x, y, width, height} = item
@@ -49,7 +50,7 @@ export default {
         })
 
         return {
-            image: sprite.encode('png'),
+            image: sprite,
             coordinates,
             properties
         }

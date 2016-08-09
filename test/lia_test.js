@@ -4,20 +4,19 @@
 
 let assert = require('assert')
 let fs = require('fs-extra')
-let path = require('path')
 let child = require('child_process')
-
+let path = require('path')
 let Lia = require('../main.js')
 
-describe('Different Options', function() {
+describe('Main', function() {
     this.timeout(5000)
 
-    describe('module', function() {
+    describe('call Lia as module', function() {
         before(function() {
             fs.emptyDirSync('test/tmp')
         })
 
-        it('run', function() {
+        it('should run without exception', function() {
             assert.doesNotThrow(function() {
                 let lia = new Lia({
                     src: ['test/fixtures/*.png'],
@@ -35,23 +34,23 @@ describe('Different Options', function() {
                     quiet: true
                 })
                 lia.run()
-            }, 'should run without exception')
+            })
         })
 
-        it('build stylesheet', function() {
+        it('should build stylesheet successful', function() {
             assert.doesNotThrow(function() {
                 fs.statSync('test/tmp/sprite.css')
-            }, 'should output stylesheet file')
+            })
         })
 
-        it('build sprite pictures', function() {
+        it('should build sprite pictures successful', function() {
             assert.doesNotThrow(function() {
                 fs.statSync('test/tmp/sprite.png')
-            }, 'should output sprite file')
+            })
         })
     })
 
-    describe('$lia here', function() {
+    describe('call Lia via `$lia here`', function() {
         before(function() {
             fs.emptyDirSync('test/tmp')
         })
@@ -60,46 +59,44 @@ describe('Different Options', function() {
             fs.remove('test/fixtures/sprites-fixtures.png')
         })
 
-        it('run', function() {
-            assert.doesNotThrow(function() {
-                let ret = child.spawnSync('node', ['../../bin/lia', 'here'], {
-                    cwd: path.join(__dirname, 'fixtures'),
-                    encoding: 'utf8'
-                })
-                if (ret.stderr) {
-                    throw Error(ret.stderr)
+        it('should run without exception', function(done) {
+            child.exec('node ../../bin/lia here', {
+                cwd: path.join(__dirname, 'fixtures')
+            }, function(error, stdout) {
+                if (error) {
+                    throw error
                 }
-            }, 'should run without exception')
+                done()
+            })
         })
 
-        it('build sprite pictures', function() {
+        it('should build sprite pictures successful', function() {
             assert.doesNotThrow(function() {
                 fs.statSync('test/fixtures/sprites-fixtures.png')
-            }, 'should output sprite file')
+            })
         })
     })
 
-    describe('$lia init', function() {
+    describe('call Lia via `$lia init`', function() {
         before(function() {
             fs.emptyDirSync('test/tmp')
         })
 
-        it('run', function() {
-            assert.doesNotThrow(function() {
-                let ret = child.spawnSync('node', ['../../bin/lia', 'init'], {
-                    cwd: path.join(__dirname, 'tmp'),
-                    encoding: 'utf8'
-                })
-                if (ret.stderr) {
-                    throw Error(ret.stderr)
+        it('should run without exception', function(done) {
+            child.exec('node ../../bin/lia init', {
+                cwd: path.join(__dirname, 'tmp')
+            }, function(error) {
+                if (error) {
+                    throw error
                 }
-            }, 'should run without exception')
+                done()
+            })
         })
 
-        it('build sprite_conf.js', function() {
+        it('should build sprite_conf.js successful', function() {
             assert.doesNotThrow(function() {
                 fs.statSync('test/tmp/sprite_conf.js')
-            }, 'should output sprite_conf.js')
+            })
         })
     })
 })
