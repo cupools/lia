@@ -5,7 +5,7 @@ import template from 'es6-template-strings'
 import image from './utils/image'
 import log from './utils/log'
 
-class Sprite {
+class Lia {
     constructor(options) {
         this.options = Object.assign({
             src: ['**/sprite-*.png'],
@@ -190,4 +190,4 @@ class Sprite {
 
 }
 
-export default Sprite
+export default Lia
