@@ -22,7 +22,8 @@
     "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
-    "images": "^3.0.0"
+    "images": "^3.0.0",
+    "layout": "^2.2.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",

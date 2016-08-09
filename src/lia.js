@@ -36,24 +36,14 @@ class Sprite {
             return false
         }
 
-        image.process(sprites, opt)
-        // let ret = child.spawnSync('node', [path.join(__dirname, 'spritesmith.js'), '-sprites', JSON.stringify(sprites), '-options', JSON.stringify(opt)], {
-        //     encoding: 'utf8'
-        // })
+        let result = image.process(sprites, opt)
 
-        // if (ret.stderr) {
-        //     log.error(ret.stderr)
-        //     return false
-        // }
-
-        // let result = JSON.parse(ret.stdout.toString())
-
-        // if (opt.image) {
-        //     this._buildImage(result)
-        // }
-        // if (opt.style) {
-        //     this._outputStyle(result)
-        // }
+        if (opt.image) {
+            this._buildImage(result)
+        }
+        if (opt.style) {
+            this._outputStyle(result)
+        }
     }
 
     _buildImage({image}) {

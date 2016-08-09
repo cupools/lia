@@ -1,15 +1,57 @@
-import images from 'images'
-import path from 'path'
+import Images from 'images'
+import layout from 'layout'
 
 export default {
     process(files, options) {
-        let sprite = images(200, 500)
+        let {padding, algorithm} = options
+        let layer = layout(algorithm)
 
-        files.map((file, idx) => {
-            let img = images(file)
-            sprite.draw(img, 0, idx * 50)
+        files.map(file => {
+            let img = Images(file)
+            let size = img.size()
+            let meta = {
+                file,
+                img
+            }
+
+            let item = Object.assign({}, meta, {
+                width: size.width + padding,
+                height: size.height + padding
+            })
+            layer.addItem(item)
         })
 
-        sprite.save(path.join(process.cwd(), 'test/tmp/test.png'))
+        let {width, height, items} = layer.export()
+
+        width -= padding
+        height -= padding
+
+        let sprite = Images(width, height)
+        let properties = {
+            width,
+            height
+        }
+        let coordinates = {}
+
+        items.map(item => {
+            let {file, img, x, y, width, height} = item
+
+            width -= padding
+            height -= padding
+
+            coordinates[file] = {
+                width,
+                height,
+                x,
+                y
+            }
+            sprite.draw(img, x, y)
+        })
+
+        return {
+            image: sprite.encode('png'),
+            coordinates,
+            properties
+        }
     }
 }
