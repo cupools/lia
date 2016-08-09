@@ -1,6 +1,8 @@
 import Images from 'images'
 import layout from 'layout'
 
+const INFINITE = 10e4
+
 export default {
     process(files, options) {
         let {padding, algorithm} = options
@@ -27,7 +29,9 @@ export default {
         width -= padding
         height -= padding
 
+        Images.setLimit(INFINITE, INFINITE)
         let sprite = Images(width, height)
+
         let coordinates = {}
         let properties = {
             width,
@@ -50,7 +54,7 @@ export default {
         })
 
         return {
-            image: sprite,
+            image: sprite.encode('png'),
             coordinates,
             properties
         }

@@ -49,9 +49,10 @@ class Sprite {
     _buildImage({image}) {
         let opt = this.options
         let outputPath = this._resolvePath(opt.image)
+        let content = new Buffer(image)
 
         this.outputImage({
-            image,
+            content,
             outputPath,
             opt
         })
@@ -92,9 +93,9 @@ class Sprite {
         })
     }
 
-    outputImage({outputPath, image, opt}) {
+    outputImage({outputPath, content, opt}) {
         try {
-            image.save(outputPath, 'png')
+            fs.outputFileSync(outputPath, content, 'binary')
             log.build(opt.image)
         } catch (e) {
             log.error(e.message)
