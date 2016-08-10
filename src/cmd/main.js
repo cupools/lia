@@ -1,5 +1,5 @@
 import path from 'path'
-import Sprites from '../lia'
+import Lia from '../lia'
 import log from '../utils/log'
 
 export default function() {
@@ -13,7 +13,7 @@ export default function() {
     }
 
     config.map(conf => {
-        let sp = new Sprites(conf)
-        sp.run()
+        let lia = new Lia(conf)
+        lia.run()
     })
 }

@@ -1,6 +1,6 @@
 import chokidar from 'chokidar'
 import path from 'path'
-import Sprites from '../lia'
+import Lia from '../lia'
 import log from '../utils/log'
 
 class Task {
@@ -13,6 +13,7 @@ class Task {
     check(p) {
         let resource = this.resource
 
+        // 长度变化
         if (resource.length !== this.lastLength) {
             this.todo = true
             this.lastLength = resource.length
@@ -45,17 +46,18 @@ let watching = {
             config = require(confPath)
         } catch (e) {
             log.warn('sprite_conf.js not found or something wrong. Try `sprites init`.')
+            return false
         }
 
         config.map(conf => {
-            let sprites = new Sprites(conf)
+            let sprites = new Lia(conf)
             let task = new Task(sprites)
 
             this.tasks.push(task)
             this.ignores.push(sprites._name(conf.image))
         })
 
-        this.watch()
+        return this.watch()
     },
     watch() {
         let timer = null
@@ -63,10 +65,12 @@ let watching = {
         let ignores = this.ignores.join('|')
         let ignored = new RegExp(ignores)
 
-        chokidar.watch('**/*.png', {
+        let watcher = chokidar.watch('**/*.png', {
             awaitWriteFinish: true,
             ignored
-        }).on('all', (event, p) => {
+        })
+
+        watcher.on('all', (event, p) => {
             pond.push(p)
 
             clearTimeout(timer)
@@ -74,9 +78,11 @@ let watching = {
                 this.monitor()
             }, wait)
         })
+
+        return watcher
     },
     monitor() {
-        let start = +new Date()
+        let start = Date.now()
         let tasks = this.tasks
         let pond = this.pond
 
@@ -91,12 +97,12 @@ let watching = {
 
         tasks.map(t => t.run())
 
-        let end = +new Date()
+        let end = Date.now()
 
         log.info(`Finish in ${(end - start) / 1000}s. Waiting...`)
     }
 }
 
 export default function() {
-    watching.main()
+    return watching.main()
 }

@@ -7,8 +7,8 @@
     "lia": "./bin/lia"
   },
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha test/ --compilers js:babel-core/register",
-    "coverage": "babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage -- --compilers js:babel-core/register -i test/*.test.js",
+    "test": "babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage --root src --include-all-sources true -- --compilers js:babel-core/register -i test/*.test.js",
+    "coverage": "cat test/coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "dev": "babel src -d lib -D --presets es2015 -w"
   },
   "author": "liyh <cupools@gmail.com>",
@@ -18,7 +18,7 @@
     "test": "test"
   },
   "dependencies": {
-    "chokidar": "^1.5.1",
+    "chokidar": "^1.6.0",
     "colors": "^1.1.2",
     "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
@@ -33,6 +33,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-runtime": "^6.11.6",
     "chai": "^3.5.0",
+    "coveralls": "^2.11.12",
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^2.3.3"
   },

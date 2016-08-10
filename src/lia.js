@@ -94,21 +94,13 @@ class Lia {
     }
 
     outputImage({outputPath, content, opt}) {
-        try {
-            fs.outputFileSync(outputPath, content, 'binary')
-            log.build(opt.image)
-        } catch (e) {
-            log.error(e.message)
-        }
+        fs.outputFileSync(outputPath, content, 'binary')
+        log.build(opt.image)
     }
 
     outputStyle({outputPath, content, opt}) {
-        try {
-            fs.outputFileSync(outputPath, content, 'utf8')
-            log.build(opt.style)
-        } catch (e) {
-            log.error(e.message)
-        }
+        fs.outputFileSync(outputPath, content, 'utf8')
+        log.build(opt.style)
     }
 
     _render(originPath, {width, height, x, y}, {totalWidth, totalHeight}) {

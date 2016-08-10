@@ -1,5 +1,5 @@
 module.exports = [{
-    src: ['**/sprite-*.png'],
+    src: ['*.png'],
     image: 'build/sprite.png',
     style: 'build/sprite.css',
     prefix: '',
@@ -11,5 +11,5 @@ module.exports = [{
     algorithm: 'binary-tree',
     tmpl: '',
     wrap: '',
-    quiet: false
-}];
+    quiet: true
+}]
