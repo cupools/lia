@@ -1,3 +1,3 @@
 'use strict'
 
-module.exports = require('./src/lia.js').default
+module.exports = require('./lib/lia.js').default
