@@ -25,7 +25,8 @@
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "images": "^3.0.0",
-    "layout": "^2.2.0"
+    "layout": "^2.2.0",
+    "lodash.sortby": "^4.6.1"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

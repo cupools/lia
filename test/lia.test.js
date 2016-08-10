@@ -11,7 +11,7 @@ describe('Main', function() {
             fs.emptyDirSync('test/tmp')
         })
 
-        let Lia = require('../main')
+        let Lia = require('../src/lia').default
 
         it('should run without exception', function() {
             let lia = new Lia({
@@ -24,7 +24,7 @@ describe('Main', function() {
                 convert: 1,
                 blank: 0,
                 padding: 10,
-                algorithm: 'binary-tree',
+                algorithm: 'left-right',
                 tmpl: '',
                 wrap: '',
                 quiet: true
@@ -74,7 +74,7 @@ describe('Main', function() {
             fs.emptyDirSync('test/tmp')
         })
 
-        let Lia = require('../main')
+        let Lia = require('../src/lia').default
 
         it('should output .js successful', function() {
             let lia = new Lia({
