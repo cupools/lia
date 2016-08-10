@@ -159,12 +159,12 @@ describe('Main', function() {
     describe('call Lia via `$lia here`', function() {
         before(function() {
             fs.emptyDirSync('test/tmp')
-            process.chdir('test/fixtures')
+            fs.copySync('test/fixtures', 'test/tmp')
+            process.chdir('test/tmp/keyframes')
         })
 
         after(function() {
-            process.chdir('../..')
-            fs.remove('test/fixtures/sprites-fixtures.png')
+            process.chdir('../../..')
         })
 
         it('should run without exception', function() {
@@ -173,7 +173,7 @@ describe('Main', function() {
         })
 
         it('should build sprite pictures successful', function() {
-            expect(fs.statSync('sprites-fixtures.png')).to.be.an('object')
+            expect(fs.statSync('sprites-keyframes.png')).to.be.an('object')
         })
     })
 
