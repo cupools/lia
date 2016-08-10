@@ -1,6 +1,7 @@
 # Lia
 
 [![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
+[![Coverage Status](https://coveralls.io/repos/github/cupools/lia/badge.svg?branch=master)](https://coveralls.io/github/cupools/lia?branch=master)
 
 `Lia` finds image resources according to `sprite_conf.js`, then builds sprite pictures and output stylesheet files to specify directory.
 
@@ -295,6 +296,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## Update
+- v1.2.0
+    - Use [node-images](https://github.com/zhangyuanwei/node-images) as image engine and thus greatly speed up compilation
 - v1.1.1
     - Update for Node v0.12 support
 - v1.1.0

@@ -1,6 +1,7 @@
 # Lia
 
 [![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
+[![Coverage Status](https://coveralls.io/repos/github/cupools/lia/badge.svg?branch=master)](https://coveralls.io/github/cupools/lia?branch=master)
 
 `Lia` 通过 `sprite_conf.js` 的配置命中图片资源，然后输出精灵图片和样式文件到指定文件夹。
 
@@ -292,6 +293,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## 更新日志
+- v1.2.0
+    - 使用 [node-images](https://github.com/zhangyuanwei/node-images) 作为图片引擎，极大提高了编译速度
 - v1.1.1
     - 兼容 Node v0.12
 - v1.1.0
