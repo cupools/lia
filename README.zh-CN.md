@@ -293,6 +293,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## 更新日志
+- v1.2.2
+    - 使用 `lodash.sortby` 替代 `Array.prototype.sort` 以修正图片排序问题，多出现在 `$lia here`
 - v1.2.0
     - 使用 [node-images](https://github.com/zhangyuanwei/node-images) 作为图片引擎，极大提高了编译速度
 - v1.1.1

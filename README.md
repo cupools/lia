@@ -296,6 +296,8 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
 ```
 
 ## Update
+- v1.2.2
+    - Replace `Array.prototype.sort` with `lodash.sortby` to fix orders of sprite images, which may be wrong in `$lia here`
 - v1.2.0
     - Use [node-images](https://github.com/zhangyuanwei/node-images) as image engine and thus greatly speed up compilation
 - v1.1.1
