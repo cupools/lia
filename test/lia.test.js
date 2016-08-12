@@ -40,6 +40,30 @@ describe('Main', function() {
             expect(fs.statSync('test/tmp/sprite.png')).to.be.an('object')
         })
 
+        it('should run without exception with convert as 2', function() {
+            let lia = new Lia({
+                src: ['test/fixtures/*.png'],
+                image: 'test/tmp/sprite.png',
+                style: 'test/tmp/sprite.css',
+                convert: 2,
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+        })
+
+        it('should run without exception with convert as 0', function() {
+            let lia = new Lia({
+                src: ['test/fixtures/*.png'],
+                image: 'test/tmp/sprite.png',
+                style: 'test/tmp/sprite.css',
+                convert: 0,
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+        })
+
         it('should warn and exist when finds no images', function() {
             let lia = new Lia({
                 src: ['test/fixtures/extra/*.png'],

@@ -15,6 +15,7 @@ class Lia {
             cssPath: './',
             unit: 'px',
             convert: 1,
+            decimalPlaces: 6,
             blank: 0,
             padding: 10,
             algorithm: 'binary-tree',
@@ -75,8 +76,9 @@ class Lia {
 
     _renderData({properties, coordinates}) {
         let _options = this.options
-        let width = properties.width
-        let height = properties.height
+
+        let width = this._decimal(properties.width)
+        let height = this._decimal(properties.height)
 
         let basename = path.basename(_options.image)
         let p = _options.cssPath + path.basename(_options.image)
@@ -88,12 +90,20 @@ class Lia {
         }
 
         let items = Object.keys(coordinates).map(realpath => {
-            let item = coordinates[realpath]
+            let {x, y, size} = coordinates[realpath]
             let name = _options.prefix + this._filename(realpath)
+            let width = this._decimal(size[width])
+            let height = this._decimal(size[height])
 
-            return Object.assign({}, item, {
-                name
-            })
+            return {
+                name,
+                size: {
+                    width,
+                    height
+                },
+                x,
+                y
+            }
         })
 
         return {
@@ -156,6 +166,11 @@ class Lia {
 
     _filename(p) {
         return path.basename(p).replace(/\.[\w\d]+$/, '')
+    }
+
+    _decimal(count) {
+        let {decimalPlaces, convert} = this.options
+        return convert ? Number((count / convert).toFixed(decimalPlaces)) : count
     }
 
 }

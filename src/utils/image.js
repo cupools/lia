@@ -45,15 +45,13 @@ export default {
             width -= padding
             height -= padding
 
-            let size = {
-                width,
-                height
-            }
-
             coordinates[file] = {
                 x,
                 y,
-                size
+                size: {
+                    width,
+                    height
+                }
             }
 
             sprite.draw(img, x, y)
