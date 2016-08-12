@@ -30,6 +30,7 @@ export default {
         height -= padding
 
         Images.setLimit(INFINITE, INFINITE)
+
         let sprite = Images(width, height)
 
         let coordinates = {}
@@ -44,12 +45,17 @@ export default {
             width -= padding
             height -= padding
 
-            coordinates[file] = {
+            let size = {
                 width,
-                height,
-                x,
-                y
+                height
             }
+
+            coordinates[file] = {
+                x,
+                y,
+                size
+            }
+
             sprite.draw(img, x, y)
         })
 

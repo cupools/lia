@@ -10,6 +10,5 @@ module.exports = [{
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
-    wrap: '',
     quiet: false
 }];

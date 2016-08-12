@@ -15,6 +15,10 @@ log.warn = function(msg) {
     log('[warn]: ' + colors.yellow(msg))
 }
 
+log.error = function(msg) {
+    log('[warn]: ' + colors.red(msg))
+}
+
 log.build = function(msg) {
     log.info('Created ' + colors.green(msg))
 }

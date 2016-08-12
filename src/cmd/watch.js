@@ -54,7 +54,7 @@ let watching = {
             let task = new Task(sprites)
 
             this.tasks.push(task)
-            this.ignores.push(sprites._name(conf.image))
+            this.ignores.push(path.basename(conf.image).replace(/\.[\w\d]+$/, ''))
         })
 
         return this.watch()

@@ -1,7 +1,7 @@
 import glob from 'glob'
 import path from 'path'
+import ejs from 'ejs'
 import fs from 'fs-extra'
-import template from 'es6-template-strings'
 import image from './utils/image'
 import log from './utils/log'
 
@@ -19,7 +19,6 @@ class Lia {
             padding: 10,
             algorithm: 'binary-tree',
             tmpl: '',
-            wrap: '',
             quiet: false
         }, options)
 
@@ -40,7 +39,11 @@ class Lia {
 
         if (opt.image) {
             this._buildImage(result)
+        } else {
+            log.error('`options.image` should not be null')
+            return false
         }
+
         if (opt.style) {
             this._outputStyle(result)
         }
@@ -48,7 +51,7 @@ class Lia {
 
     _buildImage({image}) {
         let opt = this.options
-        let outputPath = this._resolvePath(opt.image)
+        let outputPath = this._realpath(opt.image)
         let content = new Buffer(image)
 
         this.outputImage({
@@ -58,39 +61,50 @@ class Lia {
         })
     }
 
-    _outputStyle({coordinates, properties}) {
-        let store = []
+    _outputStyle(result) {
         let opt = this.options
-        let outputPath = this._resolvePath(opt.style)
-        let totalWidth = properties.width
-        let totalHeight = properties.height
-
-        Object.keys(coordinates).map(originPath => {
-            let payload = coordinates[originPath]
-            store.push(this._render(originPath, payload, {
-                totalWidth,
-                totalHeight
-            }))
-        })
-
-        let content = store.join('')
-        let wrap = opt.wrap
-
-        if (wrap) {
-            let imageName = this._basename(opt.image)
-            content = template(wrap, {
-                content,
-                totalWidth,
-                totalHeight,
-                imageName
-            })
-        }
+        let outputPath = this._realpath(opt.style)
+        let content = ejs.render(this._getTemplate(), this._renderData(result))
 
         this.outputStyle({
             content,
             outputPath,
             opt
         })
+    }
+
+    _renderData({properties, coordinates}) {
+        let _options = this.options
+        let width = properties.width
+        let height = properties.height
+
+        let basename = path.basename(_options.image)
+        let p = _options.cssPath + path.basename(_options.image)
+        let realpath = this._realpath(_options.image)
+        let unit = _options.unit
+        let size = {
+            width,
+            height
+        }
+
+        let items = Object.keys(coordinates).map(realpath => {
+            let item = coordinates[realpath]
+            let name = _options.prefix + this._filename(realpath)
+
+            return Object.assign({}, item, {
+                name
+            })
+        })
+
+        return {
+            basename,
+            path: p,
+            realpath,
+            unit,
+            size,
+            items,
+            _options
+        }
     }
 
     outputImage({outputPath, content, opt}) {
@@ -103,54 +117,22 @@ class Lia {
         log.build(opt.style)
     }
 
-    _render(originPath, {width, height, x, y}, {totalWidth, totalHeight}) {
-        let {unit, convert, cssPath, image, blank} = this.options
-        let imageName = this._basename(image)
-        let name = this._name(originPath)
-        let selector = this.options.prefix + name
-
-        if (convert !== 1) {
-            width = (width + blank) / convert
-            height = (height + blank) / convert
-            totalWidth = totalWidth / convert
-            totalHeight = totalHeight / convert
-            x = x / convert
-            y = y / convert
-        }
-
-        let data = {
-            name,
-            imageName,
-            totalWidth,
-            width,
-            totalHeight,
-            height,
-            x,
-            y,
-            unit,
-            cssPath,
-            image,
-            selector
-        }
-        return template(this.tmpl, data)
-    }
-
     getResource() {
         let sprites = []
-        let ignore = this._basename(this.options.image)
+        let ignore = path.basename(this.options.image)
 
         this.options.src.map(reg => {
             sprites.push(...glob.sync(reg))
         })
 
-        return [...new Set(sprites.filter(p => ignore !== this._basename(p)).map(p => this._resolvePath(p)))]
+        return [...new Set(sprites.filter(p => ignore !== path.basename(p)).map(p => this._realpath(p)))]
     }
 
     _getTemplate() {
         let tmpl = ''
         let tmplPath = ''
         let opt = this.options
-        let defaultPath = path.resolve(__dirname, './tmpl/sprite.tmpl')
+        let defaultPath = path.resolve(__dirname, './tmpl/template.ejs')
 
         if (opt.tmpl) {
             tmplPath = path.resolve(process.cwd(), opt.tmpl)
@@ -168,16 +150,12 @@ class Lia {
         return tmpl
     }
 
-    _resolvePath(...p) {
+    _realpath(...p) {
         return path.resolve.apply(null, [process.cwd(), ...p])
     }
 
-    _basename(p) {
-        return path.basename(p)
-    }
-
-    _name(p) {
-        return this._basename(p).replace(/\.[\w\d]+$/, '')
+    _filename(p) {
+        return path.basename(p).replace(/\.[\w\d]+$/, '')
     }
 
 }

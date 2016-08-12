@@ -26,7 +26,6 @@ describe('Main', function() {
                 padding: 10,
                 algorithm: 'left-right',
                 tmpl: '',
-                wrap: '',
                 quiet: true
             })
 
@@ -52,11 +51,11 @@ describe('Main', function() {
             expect(lia.run.bind(lia)).to.not.throw(Error)
         })
 
-        it('should not output images across sprite_conf', function() {
+        it('should not output stylesheet across sprite_conf', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
-                image: false,
-                style: 'test/tmp/sprite.css',
+                image: 'test/tmp/sprite.png',
+                style: false,
                 prefix: 'sp',
                 cssPath: './',
                 unit: 'rem',
@@ -65,7 +64,22 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect(fs.statSync.bind(fs, 'sprite.png')).to.throw(Error)
+            expect(fs.statSync.bind(fs, 'sprite.css')).to.throw(Error)
+        })
+
+        it('should return false when miss `option.image`', function() {
+            let lia = new Lia({
+                src: ['test/fixtures/*.png'],
+                image: '',
+                style: 'test/tmp/sprite.css',
+                cssPath: './',
+                unit: 'rem',
+                convert: 2,
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect(fs.statSync.bind(fs, 'sprite.css')).to.throw(Error)
         })
     })
 
@@ -82,7 +96,6 @@ describe('Main', function() {
                 image: 'test/tmp/sprite.png',
                 style: 'test/tmp/sprite.js',
                 tmpl: 'test/fixtures/sprite.tmpl',
-                wrap: 'module.export=[${content}]',
                 quiet: true
             })
 
