@@ -170,7 +170,7 @@ class Lia {
 
     _decimal(count) {
         let {decimalPlaces, convert} = this.options
-        return convert ? Number((count / convert).toFixed(decimalPlaces)) : count
+        return (convert && convert !== 1) ? Number((count / convert).toFixed(decimalPlaces)) : count
     }
 
 }
