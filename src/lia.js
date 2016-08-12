@@ -8,7 +8,7 @@ import log from './utils/log'
 class Lia {
     constructor(options) {
         this.options = Object.assign({
-            src: ['**/sprite-*.png'],
+            src: ['*.png'],
             image: 'build/sprite.png',
             style: 'build/sprite.css',
             prefix: '',
