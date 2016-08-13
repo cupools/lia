@@ -76,6 +76,7 @@ class Lia {
 
     _renderData({properties, coordinates}) {
         let _options = this.options
+        let {blank} = _options
 
         let width = this._decimal(properties.width)
         let height = this._decimal(properties.height)
@@ -92,8 +93,10 @@ class Lia {
         let items = Object.keys(coordinates).map(realpath => {
             let {x, y, size} = coordinates[realpath]
             let name = _options.prefix + this._filename(realpath)
-            let width = this._decimal(size.width)
-            let height = this._decimal(size.height)
+            let width = this._decimal(size.width + blank)
+            let height = this._decimal(size.height + blank)
+            x = this._decimal(x)
+            y = this._decimal(y)
 
             return {
                 name,

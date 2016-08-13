@@ -2,6 +2,7 @@
 
 import { expect } from 'chai'
 import fs from 'fs-extra'
+import './css-plugin'
 
 describe('cmd - lia watch', function() {
     this.timeout(5000)
@@ -16,12 +17,17 @@ describe('cmd - lia watch', function() {
         process.chdir('../..')
     })
 
-    let watcher
-    let last
+    let watch = require('../src/cmd/watch').default
+    let log = require('../src/utils/log').default
+    let watcher, last
 
-    it('should run without exception', function() {
+    // disable log
+    log.state(true)
+
+    it('should works', function(done) {
         expect(function() {
-            watcher = require('../src/cmd/watch').default()
+            watcher = watch()
+            watcher.on('ready', () => done())
         }).to.not.throw(Error)
     })
 
@@ -29,21 +35,26 @@ describe('cmd - lia watch', function() {
         setTimeout(function() {
             last = fs.statSync('build/sprite.png')
 
-            expect(last).to.be.an('object')
-            expect(fs.statSync('build/sprite.css')).to.be.an('object')
+            expect('build/sprite.png').to.be.exist
+            expect('build/sprite.css').to.be.exist
+            expect('build/sprite.css').to.have.selector('.0')
 
             done()
-        }, 2000)
+        }, 1000)
     })
 
     it('should trigger rebuild when remove file', function(done) {
-        fs.removeSync('1.png')
+        fs.removeSync('0.png')
 
         setTimeout(function() {
             let current = fs.statSync('build/sprite.png')
-            expect(current).to.be.an('object')
-            expect(current).to.not.equal(last)
-            expect(fs.statSync('build/sprite.css')).to.be.an('object')
+
+            expect(current.ctime.toString()).to.not.equal(last.ctime.toString())
+
+            expect('build/sprite.css').to.not.have.selector('.0')
+            expect('build/sprite.css').to.have.selector('.2').and.decl({
+                width: '50px'
+            })
 
             last = current
             done()
@@ -55,9 +66,12 @@ describe('cmd - lia watch', function() {
 
         setTimeout(function() {
             let current = fs.statSync('build/sprite.png')
-            expect(current).to.be.an('object')
-            expect(current.ctime).to.not.equal(last.ctime)
-            expect(fs.statSync('build/sprite.css')).to.be.an('object')
+
+            expect(current.ctime.toString()).to.not.equal(last.ctime.toString())
+
+            expect('build/sprite.css').to.have.selector('.2').and.decl({
+                width: '128px'
+            })
 
             last = current
             done()
@@ -69,9 +83,8 @@ describe('cmd - lia watch', function() {
 
         setTimeout(function() {
             let current = fs.statSync('build/sprite.png')
-            expect(current).to.be.an('object')
+
             expect(current.ctime.toString()).to.equal(last.ctime.toString())
-            expect(fs.statSync('build/sprite.css')).to.be.an('object')
 
             done()
         }, 4000)
@@ -86,7 +99,7 @@ describe('cmd - lia watch', function() {
         process.chdir('..')
 
         expect(function() {
-            watcher = require('../src/cmd/watch').default()
+            watcher = watch()
         }).to.not.throw(Error)
 
         process.chdir('tmp')

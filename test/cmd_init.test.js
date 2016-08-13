@@ -2,6 +2,7 @@
 
 import { expect } from 'chai'
 import fs from 'fs-extra'
+import './css-plugin'
 
 describe('cmd - lia init', function() {
     before(function() {
@@ -13,12 +14,9 @@ describe('cmd - lia init', function() {
         process.chdir('../..')
     })
 
-    it('should run without exception', function() {
+    it('should works', function() {
         let init = require('../src/cmd/init').default
         expect(init).to.not.throw(Error)
-    })
-
-    it('should build sprites_conf', function() {
-        expect(fs.statSync('sprite_conf.js')).to.be.an('object')
+        expect('sprite_conf.js').to.be.exist
     })
 })

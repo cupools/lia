@@ -2,6 +2,7 @@
 
 import { expect } from 'chai'
 import fs from 'fs-extra'
+import './css-plugin'
 
 describe('cmd - lia here', function() {
     before(function() {
@@ -14,12 +15,16 @@ describe('cmd - lia here', function() {
         process.chdir('../../..')
     })
 
-    it('should run without exception', function() {
-        let here = require('../src/cmd/here').default
+    let here = require('../src/cmd/here').default
+
+    it('should works with images', function() {
         expect(here).to.not.throw(Error)
+        expect('sprite-keyframes.png').to.be.exist
     })
 
-    it('should build sprite pictures successful', function() {
-        expect(fs.statSync('sprites-keyframes.png')).to.be.an('object')
+    it('should works without images', function() {
+        fs.emptyDirSync('./')
+        expect(here).to.not.throw(Error)
+        expect('sprite-keyframes.png').to.not.be.exist
     })
 })

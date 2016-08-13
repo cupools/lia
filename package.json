@@ -7,7 +7,7 @@
     "lia": "./bin/lia"
   },
   "scripts": {
-    "test": "node node_modules/babel-cli/bin/babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage --root src --include-all-sources true -x sprite_conf.js -- --compilers js:babel-core/register -i test/lia.test.js",
+    "test": "node node_modules/babel-cli/bin/babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage --root src --include-all-sources true -x sprite_conf.js -- --compilers js:babel-core/register -i test/*.test.js",
     "coverage": "cat test/coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "dev": "rm -rf lib && node node_modules/babel-cli/bin/babel src -d lib -D -w"
   },
