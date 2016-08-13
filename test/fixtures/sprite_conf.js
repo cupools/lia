@@ -5,11 +5,11 @@ module.exports = [{
     prefix: '',
     cssPath: './',
     unit: 'px',
-    convert: 1,
+    convert: 2,
+    decimalPlaces: 2,
     blank: 0,
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
-    wrap: '',
     quiet: true
 }]
