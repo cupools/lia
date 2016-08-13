@@ -92,8 +92,8 @@ class Lia {
         let items = Object.keys(coordinates).map(realpath => {
             let {x, y, size} = coordinates[realpath]
             let name = _options.prefix + this._filename(realpath)
-            let width = this._decimal(size[width])
-            let height = this._decimal(size[height])
+            let width = this._decimal(size.width)
+            let height = this._decimal(size.height)
 
             return {
                 name,

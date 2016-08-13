@@ -1,0 +1,22 @@
+var opt = {
+    width: <%= size.width %>,
+    height: <%= size.height %>
+    frame: {
+        src: '<%= path %>',
+        count: <%= items.length %>
+    },
+    items: [
+<% items.forEach((item, idx) => { -%>
+    {
+        index: <%= idx %>,
+        name: '<%= item.name %>',
+        width: <%= item.size.width %>,
+        height: <%= item.size.height %>,
+        x: <%= item.x %>
+        y: <%= item.y %>
+    },
+<% }) -%>
+    ]
+}
+
+module.exports = Sprite(opt)

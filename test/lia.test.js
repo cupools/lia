@@ -1,19 +1,20 @@
 /* eslint-env mocha */
 
-import { expect } from 'chai'
+import chai from 'chai'
 import fs from 'fs-extra'
+import './css-plugin'
+
+const {expect} = chai
 
 describe('Main', function() {
-    this.timeout(5000)
-
     describe('call Lia as module', function() {
-        before(function() {
+        beforeEach(function() {
             fs.emptyDirSync('test/tmp')
         })
 
         let Lia = require('../src/lia').default
 
-        it('should run without exception', function() {
+        it('should works with default options', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: 'test/tmp/sprite.png',
@@ -30,29 +31,14 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-        })
-
-        it('should build stylesheet successful', function() {
-            expect(fs.statSync('test/tmp/sprite.css')).to.be.an('object')
-        })
-
-        it('should build sprite pictures successful', function() {
-            expect(fs.statSync('test/tmp/sprite.png')).to.be.an('object')
-        })
-
-        it('should run without exception with convert as 2', function() {
-            let lia = new Lia({
-                src: ['test/fixtures/*.png'],
-                image: 'test/tmp/sprite.png',
-                style: 'test/tmp/sprite.css',
-                convert: 2,
-                quiet: true
+            expect('test/tmp/sprite.png').to.be.exist
+            expect('test/tmp/sprite.css').to.have.selector('.sp0').and.decl({
+                width: '256px',
+                background: 'url(./sprite.png) no-repeat'
             })
-
-            expect(lia.run.bind(lia)).to.not.throw(Error)
         })
 
-        it('should run without exception with convert as 0', function() {
+        it('should works with `convert` as 0', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: 'test/tmp/sprite.png',
@@ -62,9 +48,46 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect('test/tmp/sprite.png').to.be.exist
+            expect('test/tmp/sprite.css').to.have.selector('.0').and.decl({
+                width: '256px'
+            })
         })
 
-        it('should warn and exist when finds no images', function() {
+        it('should works with `convert` as 2', function() {
+            let lia = new Lia({
+                src: ['test/fixtures/*.png'],
+                image: 'test/tmp/sprite.png',
+                style: 'test/tmp/sprite.css',
+                convert: 2,
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect('test/tmp/sprite.png').to.be.exist
+            expect('test/tmp/sprite.css').to.have.selector('.0').and.decl({
+                width: '128px'
+            })
+        })
+
+        it('should works with `convert` as 3 and `decimalPlaces` as 2', function() {
+            let lia = new Lia({
+                src: ['test/fixtures/*.png'],
+                image: 'test/tmp/sprite.png',
+                style: 'test/tmp/sprite.css',
+                convert: 3,
+                decimalPlaces: 2,
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect('test/tmp/sprite.png').to.be.exist
+            expect('test/tmp/sprite.css').to.have.selector('.0').and.decl({
+                width: '85.33px'
+            })
+        })
+
+        it('should exist when finds no images', function() {
             let lia = new Lia({
                 src: ['test/fixtures/extra/*.png'],
                 image: 'test/tmp/sprite.png',
@@ -73,9 +96,11 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect('test/tmp/sprite.png').to.not.be.exist
+            expect('test/tmp/sprite.css').to.not.be.exist
         })
 
-        it('should not output stylesheet across sprite_conf', function() {
+        it('should not output stylesheet with `style` as false', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: 'test/tmp/sprite.png',
@@ -88,10 +113,10 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect(fs.statSync.bind(fs, 'sprite.css')).to.throw(Error)
+            expect('build/sprite.css').to.not.be.exsit
         })
 
-        it('should return false when miss `option.image`', function() {
+        it('should do nothing with `image` as \'\'', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: '',
@@ -103,41 +128,42 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect(fs.statSync.bind(fs, 'sprite.css')).to.throw(Error)
+            expect('build/sprite.png').to.not.be.exsit
         })
     })
 
     describe('call Lia with custom template', function() {
-        before(function() {
+        beforeEach(function() {
             fs.emptyDirSync('test/tmp')
         })
 
         let Lia = require('../src/lia').default
 
-        it('should output .js successful', function() {
+        it('should output template successful', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: 'test/tmp/sprite.png',
                 style: 'test/tmp/sprite.js',
-                tmpl: 'test/fixtures/sprite.tmpl',
+                tmpl: 'test/fixtures/template.ejs',
                 quiet: true
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect(fs.statSync('test/tmp/sprite.js')).to.be.an('object')
+            expect('test/tmp/sprite.js').to.be.exist
         })
 
-        it('should output successful whithout `tmpl`', function() {
+        it('should works whithout `tmpl`', function() {
             let lia = new Lia({
                 src: ['test/fixtures/*.png'],
                 image: 'test/tmp/sprite.png',
                 style: 'test/tmp/sprite.css',
                 tmpl: 'test/fixtures/undefined.tmpl',
+                prefix: 'sp',
                 quiet: true
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect(fs.statSync('test/tmp/sprite.css')).to.be.an('object')
+            expect('test/tmp/sprite.css').to.be.exist
         })
     })
 })

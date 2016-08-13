@@ -7,7 +7,7 @@
     "lia": "./bin/lia"
   },
   "scripts": {
-    "test": "node node_modules/babel-cli/bin/babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage --root src --include-all-sources true -x sprite_conf.js -- --compilers js:babel-core/register -i test/*.test.js",
+    "test": "node node_modules/babel-cli/bin/babel-node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --dir test/coverage --root src --include-all-sources true -x sprite_conf.js -- --compilers js:babel-core/register -i test/lia.test.js",
     "coverage": "cat test/coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "dev": "rm -rf lib && node node_modules/babel-cli/bin/babel src -d lib -D -w"
   },
@@ -22,7 +22,6 @@
     "chokidar": "^1.6.0",
     "colors": "^1.1.2",
     "ejs": "^2.5.1",
-    "es6-template-strings": "^2.0.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "images": "^3.0.0",
@@ -37,7 +36,8 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.12",
     "istanbul": "^1.0.0-alpha.2",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "postcss": "^5.1.2"
   },
   "repository": {
     "type": "git",
