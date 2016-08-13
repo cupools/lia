@@ -1,5 +1,5 @@
 module.exports = [{
-    src: ['**/*.png'],
+    src: ['*.png'],
     image: 'build/sprite.png',
     style: 'build/sprite.css',
     prefix: '',

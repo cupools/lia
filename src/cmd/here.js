@@ -6,9 +6,9 @@ export default function() {
     let lia = new Lia({
         src: ['*.png'],
         image: image,
-        algorithm: 'top-down',
-        style: false,
-        quiet: true
+        algorithm: 'left-right',
+        padding: 0,
+        style: false
     })
 
     lia.run()

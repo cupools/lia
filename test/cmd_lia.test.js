@@ -15,10 +15,6 @@ describe('cmd - lia', function() {
     })
 
     let main = require('../src/cmd/main').default
-    let log = require('../src/utils/log').default
-
-    // disable log
-    log.state(true)
 
     it('should exist without sprite_conf.js', function() {
         expect(main).to.not.throw(Error)

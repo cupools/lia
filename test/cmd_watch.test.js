@@ -18,11 +18,7 @@ describe('cmd - lia watch', function() {
     })
 
     let watch = require('../src/cmd/watch').default
-    let log = require('../src/utils/log').default
     let watcher, last
-
-    // disable log
-    log.state(true)
 
     it('should works', function(done) {
         expect(function() {

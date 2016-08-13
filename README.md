@@ -13,8 +13,8 @@ If you are tend to build sprite pictures according to stylesheet, maybe you like
 - Supports `rem` as well as numerical conversion.
 - Output multiple sprite pictures and stylesheet files in once time.
 - Monitor file changes and incremental recompilation.
-- Create sprites picture in current folder easily. May be useful for css keyframes animation.
-- Support custom template for stylesheet file. It means scss, json and any format you want can be outputed.
+- Create sprites picture in current folder easily. May be useful for css or canvas keyframes animation.
+- Support custom template for coordinates infomation. It means scss, js and any format you want can be build.
 
 ## Getting started
 
@@ -59,18 +59,19 @@ What we should be care about is `sprite_conf.js`. When `lia init`, it looks like
 ```js
 // sprite_conf.js
 module.exports = [{
-    src: ['**/sprite-*.png'],
+    src: ['*.png'],
     image: 'build/sprite.png',
     style: 'build/sprite.css',
     prefix: '',
     cssPath: './',
     unit: 'px',
     convert: 1,
+    decimalPlaces: 6,
     blank: 0,
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
-    wrap: ''
+    quiet: false
 }];
 ```
 
@@ -81,21 +82,21 @@ And in the example above, it results in:
 .sprite-icon0 {
     width: 256px;
     height: 256px;
-    background: url(./sprite.png) no-repeat;
+    background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
     background-position: 0px 0px;
 }
 .sprite-icon1 {
     width: 256px;
     height: 256px;
-    background: url(./sprite.png) no-repeat;
+    background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
     background-position: -266px 0px;
 }
 .sprite-icon2 {
     width: 100px;
     height: 100px;
-    background: url(./sprite.png) no-repeat;
+    background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
     background-position: 0;
 }
@@ -105,12 +106,11 @@ And in the example above, it results in:
 
 Having get those stylesheet files and sprite pictures, you can use it through `@extend` or directly use the selector. Whatever you like.
 
-
 ## Parameter
 ### src
 - type: `Array`
 - desc: origin image path, use [glob-patterns](https://github.com/isaacs/node-glob)
-- default: ['\*\*/sprite-*.png']
+- default: ['*.png']
 
 ### image
 - type: `String`
@@ -119,7 +119,7 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### style
 - type: `String`
-- desc: stylesheet file path, can be like `css`, `scss`, or with [tmpl](#tmpl) and [wrap](#wrap) to be `js`, `json`, any format.
+- desc: stylesheet file path, can be `css`, `scss`, or with [tmpl](#tmpl) to be `js`, `json`, and any format.
 - default: 'build/sprite.css'
 
 ### prefix
@@ -142,6 +142,11 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 - desc: numerical scale. Useful in `rem` and Retina pictures.
 - default: 1
 
+### decimalPlaces
+- type: `Number`
+- desc: the number of decimal places to be keep with `convert`
+- default: 6
+
 ### blank
 - type: `Number`
 - desc: Create space in the edge of background container to avoid `rem` decimal calculation problem, which is common to cause background incomplete.
@@ -154,18 +159,13 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### algorithm
 - type: `String`
-- desc: layout algorithm of sprite pictures
+- desc: layout algorithm of sprite pictures. Uses [layout](https://www.npmjs.com/package/layout)
 - value: ['top-down' | 'left-right' | 'diagonal' | 'alt-diagonal' | 'binary-tree']
 - default: 'binary-tree'
 
 ### tmpl
 - type: `String`
-- desc: the path of template file, which is used to output not only stylesheet file. The variables are acceptable as follow: `name`, `imageName`, `totalWidth`, `width`, `totalHeight`, `height`, `x`, `y`, `unit`, `cssPath`, `image`, `selector`. Uses ES6 template.
-- default: ''
-
-### wrap
-- type: `String`
-- desc: a string that make up for deficiencies in [tmpl](#tmpl), such as <code>module.exports=[${content}];</code>. The variables are acceptable as follow: `content`, `totalWidth`, `totalHeight`, `imageName`. Uses ES6 template.
+- desc: the path of template file, which is used to output not only stylesheet file. Uses [Ejs](https://github.com/tj/ejs).
 - default: ''
 
 ## Example
@@ -177,7 +177,7 @@ $ lia here
 [info]: Created sprite-keyframes.png
 ```
 
-All the pictures in current directory will be output as a sprite picture in `top-down` layout, with padding `10`. It does not output stylesheet file.
+All the pictures in current directory will be output as a sprite picture in `left-right` layout order by filename, with padding `0`. It does not output stylesheet file.
 
 From:
 
@@ -187,7 +187,7 @@ From:
 
 To:
 
-![sprite keyframes](docs/sprites-keyframes.png)
+![sprite keyframes](docs/sprite-keyframe.png)
 
 ### 2. Monitor file change
 The `sprite_conf.js` look like this.
@@ -217,85 +217,127 @@ $ lia -w
 [info]: Created ./sprites/sp-animal.scss
 [info]: Created ./sprites/sp-icon.png
 [info]: Created ./sprites/sp-icon.scss
-[info]: Finish in 1.217s. Waiting...
+[info]: Finish in 76ms. Waiting...
 [info]: Created ./sprites/sp-animal.png
 [info]: Created ./sprites/sp-animal.scss
-[info]: Finish in 0.532s. Waiting...
+[info]: Finish in 32ms. Waiting...
 ```
 
-### 3. Custom template
+### 3. Custom template with
 
-`Lia` supports output any format files with sprite coordinates by custom template. It may be helpful in canvas animation and other usage scenarios.
+`Lia` supports output any format files with sprite coordinates by custom Ejs template. It may be helpful in canvas animation.
+
+
+#### Context
+The Ejs template has the follow context
+
+```js
+{
+    basename: '', // sprite image's basename
+    path: '', // sprites image's url
+    realpath: '', // sprites image's realpath
+    unit: '',
+    size: {
+        with: 0,
+        height: 0
+    },
+    items: [{
+        name: '', // origin image's basename
+        size: {
+            width: 0,
+            height: 0
+        },
+        x: 0, // offset x
+        y: 0 // offset y
+    }, ...],
+    _options: {}
+}
+```
+
+And the default template can be found in [template.ejs](#)
+
+#### Example
 
 `sprite_conf.js` as follow.
 
 ```js
 // sprite_conf.js
 module.exports = [{
-    src: ['images/animal/*.png'],
-    image: 'build/sprite.png',
-    style: 'build/sprite.js',
-    unit: 'px',
-    tmpl: './obj.tmpl',
-    wrap: 'module.exports={name: \'${imageName}\', totalWidth: ${totalWidth}, totalHeight: ${totalWidth}, data: [${content}]}'
+    src: ['test/fixtures/*.png'],
+    image: 'test/tmp/sprite.png',
+    style: 'test/tmp/sprite.js',
+    tmpl: 'test/fixtures/template.ejs'
 }];
 ```
 
-Template file `obj.tmpl` as follow.
+Template file `template.ejs` as follow.
 
 ```js
-// obj.tmpl
-{
-    name: '${name}',
-    width: ${width},
-    height: ${height},
-    offset: {
-        x: ${x},
-        y: ${y}
-    }
-},
+// template.ejs
+var opt = {
+    width: <%= size.width %>,
+    height: <%= size.height %>,
+    src: '<%= realpath %>',
+    count: <%= items.length %>,
+    items: [
+<% items.forEach((item, idx) => { -%>
+    {
+        index: <%= idx %>,
+        name: '<%= item.name %>',
+        width: <%= item.size.width %>,
+        height: <%= item.size.height %>,
+        x: <%= item.x %>
+        y: <%= item.y %>
+    },
+<% }) -%>
+    ]
+}
 ```
 
 Run in CLI.
 
 ```bash
 $ lia
-[info]: Created build/sprite.png
-[info]: Created build/sprite.js
+[info]: Created test/tmp/sprite.png
+[info]: Created test/tmp/sprite.js
 ```
 
-It will output `sprite.js` and `sprite.png` as follow.
+Then you get `sprite.js` and `sprite.png`
 
 ```js
 // sprite.js
-module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
-    name: 'bird',
-    width: 131,
-    height: 210,
-    offset: {
-        x: 179,
+var opt = {
+    width: 522,
+    height: 256,
+    src: '/Users/Lance/home/lia/test/tmp/sprite.png',
+    count: 2,
+    items: [
+    {
+        index: 0,
+        name: '0',
+        width: 256,
+        height: 256,
+        x: 0
         y: 0
-    }
-},{
-    name: 'cat',
-    width: 131,
-    height: 178,
-    offset: {
-        x: 320,
+    },
+    {
+        index: 1,
+        name: '1',
+        width: 256,
+        height: 256,
+        x: 266
         y: 0
-    }
-},{
-    name: 'cow',
-    width: 169,
-    height: 219,
-    offset: {
-        x: 0,
-        y: 0
-    }
-},]}
+    },
+    ]
+}
 ```
 
 ## Update
+- v2.0.0
+    - Easier and stronger template supports with `ejs`
+    - Remove `option.wrap` and add `option.decimalPlaces`
+    - Update default options
+    - Stronger test coverage
 - v1.2.2
     - Replace `Array.prototype.sort` with `lodash.sortby` to fix orders of sprite images, which may be wrong in `$lia here`
 - v1.2.0
@@ -317,6 +359,12 @@ module.exports={name: 'sprite.png', totalWidth: 451, totalHeight: 451, data: [{
     - Add parameter `tmpl` and `wrap`, which be abled to output json and any format file with sprit coordinats
 - v0.0.1: 
     - Basic functions
+
+## Test
+
+```bash
+npm i && npm test
+```
 
 ## License
 

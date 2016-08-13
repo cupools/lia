@@ -4,7 +4,7 @@ let state = true
 
 let log = function(msg) {
     /* istanbul ignore next */
-    state && console.log(msg)
+    process.env.NODE_ENV !== 'test' && state && console.log(msg)
 }
 
 log.info = function(msg) {

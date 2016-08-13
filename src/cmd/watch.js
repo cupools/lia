@@ -99,7 +99,7 @@ let watching = {
 
         let end = Date.now()
 
-        log.info(`Finish in ${(end - start) / 1000}s. Waiting...`)
+        log.info(`Finish in ${end - start}ms. Waiting...`)
     }
 }
 

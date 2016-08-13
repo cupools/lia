@@ -1,10 +1,8 @@
 var opt = {
     width: <%= size.width %>,
-    height: <%= size.height %>
-    frame: {
-        src: '<%= path %>',
-        count: <%= items.length %>
-    },
+    height: <%= size.height %>,
+    src: '<%= realpath %>',
+    count: <%= items.length %>,
     items: [
 <% items.forEach((item, idx) => { -%>
     {
