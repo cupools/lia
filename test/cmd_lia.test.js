@@ -5,6 +5,8 @@ import fs from 'fs-extra'
 import './css-plugin'
 
 describe('cmd - lia', function() {
+    this.timeout(5000)
+
     before(function() {
         fs.emptyDirSync('test/tmp')
         process.chdir('test/tmp')
