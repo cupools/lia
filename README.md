@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
 [![Coverage Status](https://coveralls.io/repos/github/cupools/lia/badge.svg?branch=master)](https://coveralls.io/github/cupools/lia?branch=master)
 
-`Lia` finds image resources according to `sprite_conf.js`, then builds sprite pictures and output stylesheet files to specify directory.
+`Lia` finds image resources according to `sprite_conf.js`, then builds sprite images and output stylesheet files to specify directory.
 
-If you are tend to build sprite pictures according to stylesheet, maybe you like [Emilia](https://github.com/cupools/emilia).
+If you are tend to build sprite images according to stylesheet, maybe you like [Emilia](https://github.com/cupools/emilia).
 
 [中文文档](README.zh-CN.md)
 
@@ -14,7 +14,7 @@ If you are tend to build sprite pictures according to stylesheet, maybe you like
 - Output multiple sprite pictures and stylesheet files in once time.
 - Monitor file changes and incremental recompilation.
 - Create sprites picture in current folder easily. May be useful for css or canvas keyframes animation.
-- Support custom template for coordinates infomation. It means scss, js and any format you want can be build.
+- Support custom template for coordinates infomation. It means scss, js and any format you want can be built.
 
 ## Getting started
 
@@ -31,7 +31,7 @@ $ lia -h
   Commands:
 
     init                   Create sprite_conf.js
-    here                   Build sprite pictures in current directory
+    here                   Build sprite images in current directory
     -w, watch              Monitor file changes and incremental recompilation
     -h, help               Output usage information
 ```
@@ -52,9 +52,9 @@ $ lia
 [info]: Created build/sprite.css
 ```
 
-And it works.
+That's all.
 
-What we should be care about is `sprite_conf.js`. When `lia init`, it looks like:
+What we should be care about is `sprite_conf.js`. When `lia init`, it create the config file in current directory:
 
 ```js
 // sprite_conf.js
@@ -75,25 +75,25 @@ module.exports = [{
 }];
 ```
 
-And in the example above, it results in:
+And in the example above, it finally outputs `sprite.css` and `sprite.png`
 
 ```css
 /* build/sprite.css */
-.sprite-icon0 {
+.icon0 {
     width: 256px;
     height: 256px;
     background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
     background-position: 0px 0px;
 }
-.sprite-icon1 {
+.icon1 {
     width: 256px;
     height: 256px;
     background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
     background-position: -266px 0px;
 }
-.sprite-icon2 {
+.icon2 {
     width: 100px;
     height: 100px;
     background: url('./sprite.png') no-repeat;
@@ -104,7 +104,7 @@ And in the example above, it results in:
 
 ![sprites demo](docs/sprites.png)
 
-Having get those stylesheet files and sprite pictures, you can use it through `@extend` or directly use the selector. Whatever you like.
+Having get those stylesheet files and sprite images, you can use it through `@extend` or directly use the selector. Whatever you like.
 
 ## Parameter
 ### src
@@ -114,12 +114,12 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### image
 - type: `String`
-- desc: sprite picture output path
+- desc: output path of sprite image
 - default: 'build/sprite.png'
 
 ### style
 - type: `String`
-- desc: stylesheet file path, can be `css`, `scss`, or with [tmpl](#tmpl) to be `js`, `json`, and any format.
+- desc: output path of stylesheet, can be `css`, `scss`, or with [tmpl](#tmpl) to be `js`, `json`, and any format.
 - default: 'build/sprite.css'
 
 ### prefix
@@ -129,7 +129,7 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### cssPath
 - type: `String`
-- desc: image url path
+- desc: relative path or publish path of sprite image
 - default: '../images/'
 
 ### unit
@@ -139,12 +139,12 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### convert
 - type: `Number`
-- desc: numerical scale. Useful in `rem` and Retina pictures.
+- desc: numerical scale. Useful with `rem` and Retina pictures.
 - default: 1
 
 ### decimalPlaces
 - type: `Number`
-- desc: the number of decimal places to be keep with `convert`
+- desc: keep the number of decimal places with `convert`
 - default: 6
 
 ### blank
@@ -154,12 +154,12 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 
 ### padding
 - type: `Number`
-- desc: padding between images
+- desc: padding between pictures
 - default: 10
 
 ### algorithm
 - type: `String`
-- desc: layout algorithm of sprite pictures. Uses [layout](https://www.npmjs.com/package/layout)
+- desc: layout algorithm of pictures. Uses [layout](https://www.npmjs.com/package/layout)
 - value: ['top-down' | 'left-right' | 'diagonal' | 'alt-diagonal' | 'binary-tree']
 - default: 'binary-tree'
 
@@ -168,16 +168,16 @@ Having get those stylesheet files and sprite pictures, you can use it through `@
 - desc: the path of template file, which is used to output not only stylesheet file. Uses [Ejs](https://github.com/tj/ejs).
 - default: ''
 
-## Example
+## Examples
 
 ### Easily build sprite pictures in current directory
 
 ```bash
 $ lia here
-[info]: Created sprite-keyframes.png
+[info]: Created sprite-keyframe.png
 ```
 
-All the pictures in current directory will be output as a sprite picture in `left-right` layout order by filename, with padding `0`. It does not output stylesheet file.
+All the pictures in current directory will be output as a sprite image in `left-right` layout order by filename, with padding `0`. It does not output stylesheet file.
 
 From:
 
@@ -190,7 +190,7 @@ To:
 ![sprite keyframes](docs/sprite-keyframe.png)
 
 ### 2. Monitor file change
-The `sprite_conf.js` look like this.
+The `sprite_conf.js` as follow.
 
 ```js
 // sprite_conf
@@ -209,7 +209,7 @@ module.exports = [{
 }];
 ```
 
-And when run `lia watch`, it runs like this.
+And when run `lia watch`, it works.
 
 ```bash
 $ lia -w
@@ -223,10 +223,9 @@ $ lia -w
 [info]: Finish in 32ms. Waiting...
 ```
 
-### 3. Custom template with
+### 3. Custom template with `Ejs`
 
-`Lia` supports output any format files with sprite coordinates by custom Ejs template. It may be helpful in canvas animation.
-
+`Lia` supports output file in any format with sprite coordinates by custom Ejs template. It may be helpful in canvas animation.
 
 #### Context
 The Ejs template has the follow context
@@ -234,7 +233,7 @@ The Ejs template has the follow context
 ```js
 {
     basename: '', // sprite image's basename
-    path: '', // sprites image's url
+    path: '', // sprites image's relative path
     realpath: '', // sprites image's realpath
     unit: '',
     size: {
@@ -254,7 +253,7 @@ The Ejs template has the follow context
 }
 ```
 
-And the default template can be found in [template.ejs](#)
+The default template can be found in [template.ejs](https://github.com/cupools/lia/blob/master/src/tmpl/template.ejs)
 
 #### Example
 
@@ -270,7 +269,7 @@ module.exports = [{
 }];
 ```
 
-Template file `template.ejs` as follow.
+Custom template file as follow.
 
 ```js
 // template.ejs
@@ -314,7 +313,7 @@ var opt = {
     items: [
     {
         index: 0,
-        name: '0',
+        name: 'icon0',
         width: 256,
         height: 256,
         x: 0
@@ -322,7 +321,7 @@ var opt = {
     },
     {
         index: 1,
-        name: '1',
+        name: 'icon1',
         width: 256,
         height: 256,
         x: 266
@@ -334,8 +333,9 @@ var opt = {
 
 ## Update
 - v2.0.0
-    - Easier and stronger template supports with `ejs`
+    - Easier and stronger template supports with `Ejs`
     - Remove `option.wrap` and add `option.decimalPlaces`
+    - In `$lia here`, layout now be `left-right` instead of `top-down`
     - Update default options
     - Stronger test coverage
 - v1.2.2
