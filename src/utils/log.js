@@ -16,11 +16,11 @@ log.warn = function(msg) {
 }
 
 log.error = function(msg) {
-    log('[warn]: ' + colors.red(msg))
+    log('[error]: ' + colors.red(msg))
 }
 
 log.build = function(msg) {
-    log.info('Created ' + colors.green(msg))
+    log.info('Create ' + colors.green(msg))
 }
 
 log.state = function(quiet) {
