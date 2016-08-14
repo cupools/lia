@@ -249,7 +249,7 @@ The Ejs template has the follow context
         x: 0, // offset x
         y: 0 // offset y
     }, ...],
-    _options: {}
+    _options: {} // the options you provide, can also inject some other data
 }
 ```
 
