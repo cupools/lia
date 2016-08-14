@@ -279,7 +279,7 @@ var opt = {
     src: '<%= realpath %>',
     count: <%= items.length %>,
     items: [
-<% items.forEach((item, idx) => { -%>
+<% items.forEach(function(item, idx) { -%>
     {
         index: <%= idx %>,
         name: '<%= item.name %>',
