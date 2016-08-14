@@ -98,7 +98,7 @@ And in the example above, it finally outputs `sprite.css` and `sprite.png`
     height: 100px;
     background: url('./sprite.png') no-repeat;
     background-size: 522px 366px;
-    background-position: 0;
+    background-position: 0px -266px;
 }
 ```
 
