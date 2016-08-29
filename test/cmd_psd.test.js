@@ -17,11 +17,15 @@ describe('cmd - lia psd', function() {
     let psd = require('../src/cmd/psd').default
 
     it('should works without sprite_conf', function() {
-        expect(psd).to.not.throw(Error)
+        expect(function(done) {
+            psd().then(done)
+        }).to.not.throw(Error)
     })
 
     it('should works', function() {
         fs.copySync('../../fixtures/psd_conf.js', 'sprite_conf.js')
-        expect(psd).to.not.throw(Error)
+        expect(function(done) {
+            psd().then(done)
+        }).to.not.throw(Error)
     })
 })
