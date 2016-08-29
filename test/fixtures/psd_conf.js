@@ -5,5 +5,5 @@ module.exports = [{
     style: false,
     padding: 0,
     algorithm: 'left-right',
-    quiet: true
+    quiet: false
 }]
