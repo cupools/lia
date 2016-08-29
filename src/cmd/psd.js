@@ -46,11 +46,13 @@ async function rewrite(option) {
             let {node, buffer, output} = item
             let {top, left} = node.layer
 
-            let img = images(destWidth, destHeight)
-            let main = images(buffer)
-            let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
+            if (!node.hidden()) {
+                let img = images(destWidth, destHeight)
+                let main = images(buffer)
+                let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
 
-            fs.outputFileSync(output, buf, 'binary')
+                fs.outputFileSync(output, buf, 'binary')
+            }
         })
 
         return path.join(TMP, index + '', '/*')
