@@ -111,7 +111,7 @@ class Lia {
             }
         })
 
-        return {
+        return this.rewriteContext({
             basename,
             path: p,
             realpath,
@@ -119,7 +119,7 @@ class Lia {
             size,
             items,
             _options
-        }
+        })
     }
 
     outputImage({outputPath, content, opt}) {
@@ -141,6 +141,10 @@ class Lia {
         })
 
         return [...new Set(sprites.filter(p => ignore !== path.basename(p)).map(p => path.resolve(p)))]
+    }
+
+    rewriteContext(context) {
+        return context
     }
 
     _getTemplate() {

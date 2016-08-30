@@ -31,8 +31,8 @@ async function rewrite(option) {
     let isGlob = !(src.length === 1 && /\/$/.test(src[0]))
     let nodes = collect(tree, src, isGlob)
 
-    let data = await Promise.all(nodes.map(async node => {
-        let filename = (stamp++) + EXT
+    let rawData = await Promise.all(nodes.map(async node => {
+        let filename = (isGlob ? node.name : stamp++) + EXT
         let output = path.resolve(TMP, filename)
         let buffer = await read(node)
 
@@ -42,6 +42,8 @@ async function rewrite(option) {
             node
         }
     }))
+
+    let data = unique(rawData)
 
     if (!data.length) {
         log.warn(`No layer mapped for \`${option.src}\``)
@@ -69,9 +71,9 @@ async function rewrite(option) {
 
             let img = images(destWidth, destHeight)
             let main = images(buffer)
-            let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
+            let content = img.draw(main, left - destLeft, top - destTop).encode('png')
 
-            await new Promise(fulfill => fs.outputFile(output, buf, 'binary', fulfill))
+            await new Promise(fulfill => fs.outputFile(output, content, 'binary', fulfill))
         }))
     }
 
@@ -101,6 +103,21 @@ function collect(tree, src, isGlob) {
 
         return ret.concat(childrens.filter(node => !node.isGroup() && !node.hidden()))
     }, [])
+}
+
+function unique(obj) {
+    let _uniq = {}
+    return obj.map(item => {
+        let start = 0
+        while (_uniq[item.output + start]) {
+            start += 1
+        }
+        _uniq[item.output + start] = true
+
+        return Object.assign({}, item, {
+            output: item.output.replace('.png', (start || '') + '.png')
+        })
+    })
 }
 
 function read(node) {
