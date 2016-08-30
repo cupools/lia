@@ -52,7 +52,7 @@ class Lia {
 
     _buildImage({image}) {
         let opt = this.options
-        let outputPath = this._realpath(opt.image)
+        let outputPath = path.resolve(opt.image)
         let content = new Buffer(image)
 
         this.outputImage({
@@ -64,7 +64,7 @@ class Lia {
 
     _outputStyle(result) {
         let opt = this.options
-        let outputPath = this._realpath(opt.style)
+        let outputPath = path.resolve(opt.style)
         let content = ejs.render(this._getTemplate(), this._renderData(result))
 
         this.outputStyle({
@@ -83,7 +83,7 @@ class Lia {
 
         let basename = path.basename(_options.image)
         let p = _options.cssPath + path.basename(_options.image)
-        let realpath = this._realpath(_options.image)
+        let realpath = path.resolve(_options.image)
         let unit = _options.unit
         let size = {
             width,
@@ -138,7 +138,7 @@ class Lia {
             sprites.push(...glob.sync(reg))
         })
 
-        return [...new Set(sprites.filter(p => ignore !== path.basename(p)).map(p => this._realpath(p)))]
+        return [...new Set(sprites.filter(p => ignore !== path.basename(p)).map(p => path.resolve(p)))]
     }
 
     _getTemplate() {
@@ -148,7 +148,7 @@ class Lia {
         let defaultPath = path.resolve(__dirname, './tmpl/template.ejs')
 
         if (opt.tmpl) {
-            tmplPath = path.resolve(process.cwd(), opt.tmpl)
+            tmplPath = path.resolve(opt.tmpl)
         } else {
             tmplPath = defaultPath
         }
@@ -161,10 +161,6 @@ class Lia {
         }
 
         return tmpl
-    }
-
-    _realpath(...p) {
-        return path.resolve.apply(null, [process.cwd(), ...p])
     }
 
     _filename(p) {

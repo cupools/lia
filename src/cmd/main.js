@@ -3,7 +3,7 @@ import Lia from '../lia'
 import log from '../utils/log'
 
 export default function() {
-    let confPath = path.resolve(process.cwd(), 'sprite_conf.js')
+    let confPath = path.resolve('sprite_conf.js')
     let config = []
 
     try {

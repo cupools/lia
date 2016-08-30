@@ -40,7 +40,7 @@ let watching = {
     ignores: [],
     main() {
         let config = []
-        let confPath = path.resolve(process.cwd(), 'sprite_conf.js')
+        let confPath = path.resolve('sprite_conf.js')
 
         try {
             config = require(confPath)
@@ -90,7 +90,7 @@ let watching = {
 
         while (pond.length) {
             let p = pond.shift()
-            let realPath = path.resolve(process.cwd(), p)
+            let realPath = path.resolve(p)
 
             tasks.map(t => !t.todo && t.check(realPath))
         }

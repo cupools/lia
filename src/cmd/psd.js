@@ -25,7 +25,7 @@ async function rewrite(option) {
         let children = group ? group.children() : []
 
         let data = await Promise.all(children.map(async node => {
-            let filename = `${stamp++}${EXT}`
+            let filename = (stamp++) + EXT
             let output = path.resolve(TMP, index + '', filename)
             let buffer = await read(node)
 
@@ -44,7 +44,7 @@ async function rewrite(option) {
         let destWidth = destRight - destLeft
         let destHeight = destBottom - destTop
 
-        data.forEach(item => {
+        await Promise.all(data.map(async item => {
             let {node, buffer, output} = item
             let {top, left} = node.layer
 
@@ -53,9 +53,9 @@ async function rewrite(option) {
                 let main = images(buffer)
                 let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
 
-                fs.outputFileSync(output, buf, 'binary')
+                await new Promise(fulfill => fs.outputFile(output, buf, 'binary', fulfill))
             }
-        })
+        }))
 
         return path.join(TMP, index + '', '/*')
     }))
@@ -81,11 +81,10 @@ function read(node) {
         readStream.on('end', function() {
             let buffer = new Buffer(nread)
 
-            for (let i = 0, pos = 0, l = buffers.length; i < l; i++) {
-                let chunk = buffers[i]
+            buffers.reduce((pos, chunk) => {
                 chunk.copy(buffer, pos)
-                pos += chunk.length
-            }
+                return pos + chunk.length
+            }, 0)
 
             fulfill(buffer)
         })
@@ -103,7 +102,7 @@ async function run(config) {
 }
 
 export default async function() {
-    let confPath = path.resolve(process.cwd(), 'sprite_conf.js')
+    let confPath = path.resolve('sprite_conf.js')
     let config
 
     try {
