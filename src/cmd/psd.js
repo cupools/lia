@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 import PSD from 'psd'
+import minimatch from 'minimatch'
 
 import Lia from '../lia'
 import log from '../utils/log'
@@ -12,30 +13,48 @@ const EXT = '.png'
 // TODO async coverage
 /* istanbul ignore next */
 async function rewrite(option) {
-    let {src, psd} = option
-    let file = PSD.fromFile(psd)
+    let {psd} = option
+    let src = option.src.splice ? option.src : [option.src]
+    let file
+
+    try {
+        file = PSD.fromFile(psd)
+    } catch (e) {
+        log.error(`${psd} not found`)
+        return Promise.resolve()
+    }
 
     file.parse()
 
     let tree = file.tree()
     let stamp = Date.now()
+    let isGlob = !(src.length === 1 && /\/$/.test(src[0]))
+    let nodes = collect(tree, src, isGlob)
 
-    let destSrc = await Promise.all(src.map(async (pattern, index) => {
-        let group = tree.childrenAtPath(pattern)[0]
-        let children = group ? group.children() : []
+    let data = await Promise.all(nodes.map(async node => {
+        let filename = (stamp++) + EXT
+        let output = path.resolve(TMP, filename)
+        let buffer = await read(node)
 
-        let data = await Promise.all(children.map(async node => {
-            let filename = (stamp++) + EXT
-            let output = path.resolve(TMP, index + '', filename)
-            let buffer = await read(node)
+        return {
+            buffer,
+            output,
+            node
+        }
+    }))
 
-            return {
-                buffer,
-                output,
-                node
-            }
+    if (!data.length) {
+        log.warn(`No layer mapped for \`${option.src}\``)
+        return Promise.resolve()
+    }
+
+    if (isGlob) {
+        await Promise.all(data.map(async item => {
+            let {buffer, output} = item
+
+            await new Promise(fulfill => fs.outputFile(output, buffer, 'binary', fulfill))
         }))
-
+    } else {
         let destTop = Math.max(0, Math.min(...data.map(item => item.node.layer.top)))
         let destBottom = Math.max(0, Math.max(...data.map(item => item.node.layer.bottom)))
         let destLeft = Math.max(0, Math.min(...data.map(item => item.node.layer.left)))
@@ -48,21 +67,40 @@ async function rewrite(option) {
             let {node, buffer, output} = item
             let {top, left} = node.layer
 
-            if (!node.hidden()) {
-                let img = images(destWidth, destHeight)
-                let main = images(buffer)
-                let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
+            let img = images(destWidth, destHeight)
+            let main = images(buffer)
+            let buf = img.draw(main, left - destLeft, top - destTop).encode('png')
 
-                await new Promise(fulfill => fs.outputFile(output, buf, 'binary', fulfill))
-            }
+            await new Promise(fulfill => fs.outputFile(output, buf, 'binary', fulfill))
         }))
-
-        return path.join(TMP, index + '', '/*')
-    }))
+    }
 
     return Promise.resolve(Object.assign({}, option, {
-        src: destSrc
+        src: path.resolve(TMP, '*')
     }))
+}
+
+function collect(tree, src, isGlob) {
+    return src.reduce((ret, pattern) => {
+        let childrens
+
+        if (isGlob) {
+            let descendants = tree.descendants()
+            let mm = new minimatch.Minimatch(pattern)
+            childrens = descendants.filter(node => mm.match(node.name))
+        } else {
+            let groups = tree.childrenAtPath(pattern)
+            let group = groups[0]
+
+            if (group && groups.length > 1) {
+                log.warn(`Ignored ${groups.length - 1} \`${pattern}\` while building keyframes`)
+            }
+
+            childrens = group ? group.children() : []
+        }
+
+        return ret.concat(childrens.filter(node => !node.isGroup() && !node.hidden()))
+    }, [])
 }
 
 function read(node) {
@@ -91,14 +129,16 @@ function read(node) {
     })
 }
 
-async function run(config) {
-    await Promise.all(config.map(async conf => {
+function run(config) {
+    return Promise.all(config.map(async conf => {
         let option = await rewrite(conf)
-        let lia = new Lia(option)
-        lia.run()
-    }))
 
-    fs.removeSync(TMP)
+        if (option) {
+            let lia = new Lia(option)
+            lia.run()
+            fs.removeSync(TMP)
+        }
+    }))
 }
 
 export default async function() {
@@ -112,5 +152,7 @@ export default async function() {
         return false
     }
 
-    await run(config)
+    await run(config).catch(e => {
+        throw e
+    })
 }

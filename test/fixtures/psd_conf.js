@@ -1,5 +1,5 @@
 module.exports = [{
-    src: ['group'],
+    src: 'group/',
     psd: './keyframes.psd',
     image: 'build/sprite.png',
     style: false,

@@ -13,7 +13,6 @@ class Task {
     check(p) {
         let resource = this.resource
 
-        // 长度变化
         if (resource.length !== this.lastLength) {
             this.todo = true
             this.lastLength = resource.length

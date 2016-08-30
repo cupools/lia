@@ -21,7 +21,9 @@ class Lia {
             algorithm: 'binary-tree',
             tmpl: '',
             quiet: false
-        }, options)
+        }, options, {
+            src: options.src.splice ? options.src : [options.src]
+        })
 
         this.tmpl = this._getTemplate()
         log.state(this.options.quiet)
@@ -171,7 +173,6 @@ class Lia {
         let {decimalPlaces, convert} = this.options
         return (convert && convert !== 1) ? Number((count / convert).toFixed(decimalPlaces)) : count
     }
-
 }
 
 export default Lia
