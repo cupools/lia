@@ -1,9 +1,10 @@
 module.exports = [{
-    src: 'group/',
+    src: '{1,2,3,4}',
     psd: './keyframes.psd',
     image: 'build/sprite.png',
-    style: false,
+    style: 'build/sprite.js',
     padding: 0,
     algorithm: 'left-right',
+    tmpl: 'psd.ejs',
     quiet: false
 }]

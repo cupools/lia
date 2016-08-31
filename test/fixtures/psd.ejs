@@ -1,0 +1,19 @@
+module.exports = {
+    psd: {
+        width: <%= psd.size.width %>,
+        height: <%= psd.size.height %>
+    },
+    items: [
+<% items.forEach(function(item) { -%>
+        {
+            name: '<%= item.layer.name %>'
+            top: <%= item.layer.top %>,
+            left: <%= item.layer.left %>,
+            right: <%= item.layer.right %>,
+            bottom: <%= item.layer.bottom %>,
+            width: <%= item.layer.size.width %>,
+            height: <%= item.layer.size.height %>
+        },
+<% }) -%>
+    ]
+}

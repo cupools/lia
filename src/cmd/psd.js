@@ -12,7 +12,7 @@ const EXT = '.png'
 
 // TODO async coverage
 /* istanbul ignore next */
-async function rewrite(option) {
+async function process(option) {
     let {psd} = option
     let src = option.src.splice ? option.src : [option.src]
     let file
@@ -44,17 +44,45 @@ async function rewrite(option) {
     }))
 
     let data = unique(rawData)
+    let items = await output(data, isGlob)
 
     if (!data.length) {
         log.warn(`No layer mapped for \`${option.src}\``)
         return Promise.resolve()
     }
 
+    return Promise.resolve({
+        src: path.resolve(TMP, '*'),
+        psd: {
+            size: {
+                width: tree.layer.right,
+                height: tree.layer.bottom
+            }
+        },
+        items
+    })
+}
+
+async function output(data, isGlob) {
     if (isGlob) {
-        await Promise.all(data.map(async item => {
-            let {buffer, output} = item
+        return await Promise.all(data.map(async item => {
+            let {buffer, output, node} = item
+            let {top, left, right, bottom, width, height, name} = node.layer
 
             await new Promise(fulfill => fs.outputFile(output, buffer, 'binary', fulfill))
+
+            return {
+                name,
+                top,
+                left,
+                right,
+                bottom,
+                output,
+                size: {
+                    width,
+                    height
+                }
+            }
         }))
     } else {
         let destTop = Math.max(0, Math.min(...data.map(item => item.node.layer.top)))
@@ -65,21 +93,30 @@ async function rewrite(option) {
         let destWidth = destRight - destLeft
         let destHeight = destBottom - destTop
 
-        await Promise.all(data.map(async item => {
+        return await Promise.all(data.map(async item => {
             let {node, buffer, output} = item
-            let {top, left} = node.layer
+            let {top, left, name} = node.layer
 
             let img = images(destWidth, destHeight)
             let main = images(buffer)
             let content = img.draw(main, left - destLeft, top - destTop).encode('png')
 
             await new Promise(fulfill => fs.outputFile(output, content, 'binary', fulfill))
+
+            return {
+                name,
+                top: destTop,
+                left: destLeft,
+                right: destRight,
+                bottom: destBottom,
+                output,
+                size: {
+                    width: destWidth,
+                    height: destHeight
+                }
+            }
         }))
     }
-
-    return Promise.resolve(Object.assign({}, option, {
-        src: path.resolve(TMP, '*')
-    }))
 }
 
 function collect(tree, src, isGlob) {
@@ -146,12 +183,39 @@ function read(node) {
     })
 }
 
-function run(config) {
-    return Promise.all(config.map(async conf => {
-        let option = await rewrite(conf)
+function rewriteContext(psd, injectItems) {
+    return function(context) {
+        context.items.forEach(item => {
+            let expect = item.name
 
-        if (option) {
-            let lia = new Lia(option)
+            injectItems.some(injectItem => {
+                let {output, ...layer} = injectItem
+                let actual = path.basename(output).replace(/\.[\w\d]+$/, '')
+                let len = expect.length - actual.length
+
+                if (expect.slice(len) === actual) {
+                    item.layer = layer
+                    return true
+                }
+                return false
+            })
+        })
+
+        context.psd = psd
+
+        return context
+    }
+}
+
+function run(config) {
+    return Promise.all(config.map(async option => {
+        let ret = await process(option)
+
+        if (ret) {
+            let {src, psd, items} = ret
+            let lia = new Lia(Object.assign({}, option, {src}))
+
+            lia.rewriteContext = rewriteContext(psd, items)
             lia.run()
             fs.removeSync(TMP)
         }
@@ -170,6 +234,6 @@ export default async function() {
     }
 
     await run(config).catch(e => {
-        throw e
+        log.error(e)
     })
 }

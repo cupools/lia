@@ -92,9 +92,9 @@ class Lia {
             height
         }
 
-        let items = Object.keys(coordinates).map(realpath => {
-            let {x, y, size} = coordinates[realpath]
-            let name = _options.prefix + this._filename(realpath)
+        let items = Object.keys(coordinates).map(_realpath => {
+            let {x, y, size} = coordinates[_realpath]
+            let name = _options.prefix + this._filename(_realpath)
             let width = this._decimal(size.width + blank)
             let height = this._decimal(size.height + blank)
             x = this._decimal(x)
