@@ -11,8 +11,6 @@ import images from 'images'
 const TMP = './.lia'
 const EXT = '.png'
 
-// TODO async coverage
-/* istanbul ignore next */
 function process(option) {
     let {psd} = option
     let src = option.src.splice ? option.src : [option.src]
@@ -22,7 +20,7 @@ function process(option) {
         file = PSD.fromFile(psd)
     } catch (e) {
         log.error(`${psd} not found`)
-        return Promise.resolve()
+        return false
     }
 
     file.parse()
