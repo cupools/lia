@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import PSD from 'psd'
 import minimatch from 'minimatch'
+import pngjs from 'pngjs'
 
 import Lia from '../lia'
 import log from '../utils/log'
@@ -12,7 +13,7 @@ const EXT = '.png'
 
 // TODO async coverage
 /* istanbul ignore next */
-async function process(option) {
+function process(option) {
     let {psd} = option
     let src = option.src.splice ? option.src : [option.src]
     let file
@@ -31,27 +32,27 @@ async function process(option) {
     let isGlob = !(src.length === 1 && /\/$/.test(src[0]))
     let nodes = collect(tree, src, isGlob)
 
-    let rawData = await Promise.all(nodes.map(async node => {
+    let rawData = nodes.map(node => {
         let filename = (isGlob ? node.name : stamp++) + EXT
         let output = path.resolve(TMP, filename)
-        let buffer = await read(node)
+        let buffer = read(node)
 
         return {
             buffer,
             output,
             node
         }
-    }))
+    })
 
     let data = unique(rawData)
-    let items = await output(data, isGlob)
+    let items = output(data, isGlob)
 
     if (!data.length) {
         log.warn(`No layer mapped for \`${option.src}\``)
-        return Promise.resolve()
+        return false
     }
 
-    return Promise.resolve({
+    return {
         src: path.resolve(TMP, '*'),
         psd: {
             size: {
@@ -60,16 +61,16 @@ async function process(option) {
             }
         },
         items
-    })
+    }
 }
 
-async function output(data, isGlob) {
+function output(data, isGlob) {
     if (isGlob) {
-        return await Promise.all(data.map(async item => {
+        return data.map(item => {
             let {buffer, output, node} = item
             let {top, left, right, bottom, width, height, name} = node.layer
 
-            await new Promise(fulfill => fs.outputFile(output, buffer, 'binary', fulfill))
+            fs.outputFileSync(output, buffer, 'binary')
 
             return {
                 name,
@@ -83,7 +84,7 @@ async function output(data, isGlob) {
                     height
                 }
             }
-        }))
+        })
     } else {
         let destTop = Math.max(0, Math.min(...data.map(item => item.node.layer.top)))
         let destBottom = Math.max(0, Math.max(...data.map(item => item.node.layer.bottom)))
@@ -93,7 +94,7 @@ async function output(data, isGlob) {
         let destWidth = destRight - destLeft
         let destHeight = destBottom - destTop
 
-        return await Promise.all(data.map(async item => {
+        return data.map(item => {
             let {node, buffer, output} = item
             let {top, left, name} = node.layer
 
@@ -101,7 +102,7 @@ async function output(data, isGlob) {
             let main = images(buffer)
             let content = img.draw(main, left - destLeft, top - destTop).encode('png')
 
-            await new Promise(fulfill => fs.outputFile(output, content, 'binary', fulfill))
+            fs.outputFileSync(output, content, 'binary')
 
             return {
                 name,
@@ -115,7 +116,7 @@ async function output(data, isGlob) {
                     height: destHeight
                 }
             }
-        }))
+        })
     }
 }
 
@@ -158,29 +159,8 @@ function unique(obj) {
 }
 
 function read(node) {
-    return new Promise(fulfill => {
-        let png = node.toPng()
-
-        var buffers = []
-        var nread = 0
-
-        let readStream = png.pack()
-
-        readStream.on('data', function(chunk) {
-            buffers.push(chunk)
-            nread += chunk.length
-        })
-        readStream.on('end', function() {
-            let buffer = new Buffer(nread)
-
-            buffers.reduce((pos, chunk) => {
-                chunk.copy(buffer, pos)
-                return pos + chunk.length
-            }, 0)
-
-            fulfill(buffer)
-        })
-    })
+    let png = node.toPng()
+    return pngjs.PNG.sync.write(png)
 }
 
 function rewriteContext(psd, injectItems) {
@@ -208,8 +188,8 @@ function rewriteContext(psd, injectItems) {
 }
 
 function run(config) {
-    return Promise.all(config.map(async option => {
-        let ret = await process(option)
+    return config.map(option => {
+        let ret = process(option)
 
         if (ret) {
             let {src, psd, items} = ret
@@ -219,10 +199,10 @@ function run(config) {
             lia.run()
             fs.removeSync(TMP)
         }
-    }))
+    })
 }
 
-export default async function() {
+export default function() {
     let confPath = path.resolve('sprite_conf.js')
     let config
 
@@ -233,7 +213,5 @@ export default async function() {
         return false
     }
 
-    await run(config).catch(e => {
-        log.error(e)
-    })
+    run(config)
 }

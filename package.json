@@ -7,7 +7,7 @@
     "lia": "./bin/lia"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test node_modules/.bin/nyc --reporter lcov --reporter text --report-dir test/coverage --require babel-core/register node_modules/.bin/mocha test/*.test.js && rm -rf .nyc_output",
+    "test": "cross-env NODE_ENV=test node_modules/.bin/nyc --reporter lcov --reporter text --report-dir test/coverage --require babel-core/register node_modules/.bin/mocha test/cmd_psd.test.js && rm -rf .nyc_output",
     "coverage": "cat test/coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "dev": "rm -rf lib && node node_modules/babel-cli/bin/babel src -d lib -D -w"
   },
@@ -32,6 +32,7 @@
     "layout": "^2.2.0",
     "lodash.sortby": "^4.6.1",
     "minimatch": "^3.0.3",
+    "pngjs": "^3.0.0",
     "psd": "^3.1.0"
   },
   "devDependencies": {
