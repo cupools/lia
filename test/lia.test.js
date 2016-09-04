@@ -50,7 +50,7 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect('build/sprite.png').to.not.be.exsit
+            expect('build/sprite.png').to.not.be.exist
         })
 
         it('should works with `style` as false', function() {
@@ -66,7 +66,7 @@ describe('Main', function() {
             })
 
             expect(lia.run.bind(lia)).to.not.throw(Error)
-            expect('build/sprite.css').to.not.be.exsit
+            expect('build/sprite.css').to.not.be.exist
         })
 
         it('should works with `prefix` as sprite, .sp', function() {

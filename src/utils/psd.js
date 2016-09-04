@@ -188,11 +188,16 @@ function rewriteContext(psd, injectItems) {
 export default {
     process(opt) {
         let ret = process(opt)
-        let {src, psd, items} = ret
-        return {
-            _ret: ret,
-            rewriteOption: Object.assign({}, opt, {src}),
-            rewriteContext: rewriteContext(psd, items)
+
+        if (ret) {
+            let {src, psd, items} = ret
+            return {
+                _ret: ret,
+                rewriteOption: Object.assign({}, opt, {src}),
+                rewriteContext: rewriteContext(psd, items)
+            }
+        } else {
+            return opt
         }
     },
     clear() {
