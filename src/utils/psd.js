@@ -4,7 +4,6 @@ import PSD from 'psd'
 import minimatch from 'minimatch'
 import pngjs from 'pngjs'
 
-import Lia from '../lia'
 import log from '../utils/log'
 import images from 'images'
 
@@ -145,6 +144,7 @@ function unique(obj) {
     let _uniq = {}
     return obj.map(item => {
         let start = 0
+
         while (_uniq[item.output + start]) {
             start += 1
         }
@@ -185,31 +185,17 @@ function rewriteContext(psd, injectItems) {
     }
 }
 
-function run(config) {
-    return config.map(option => {
-        let ret = process(option)
-
-        if (ret) {
-            let {src, psd, items} = ret
-            let lia = new Lia(Object.assign({}, option, {src}))
-
-            lia.rewriteContext = rewriteContext(psd, items)
-            lia.run()
-            fs.removeSync(TMP)
+export default {
+    process(opt) {
+        let ret = process(opt)
+        let {src, psd, items} = ret
+        return {
+            _ret: ret,
+            rewriteOption: Object.assign({}, opt, {src}),
+            rewriteContext: rewriteContext(psd, items)
         }
-    })
-}
-
-export default function() {
-    let confPath = path.resolve('sprite_conf.js')
-    let config
-
-    try {
-        config = require(confPath)
-    } catch (e) {
-        log.warn('sprite_conf.js not Found. Try `lia init`.')
-        return false
+    },
+    clear() {
+        fs.removeSync(TMP)
     }
-
-    run(config)
 }

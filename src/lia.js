@@ -3,10 +3,17 @@ import path from 'path'
 import ejs from 'ejs'
 import fs from 'fs-extra'
 import image from './utils/image'
+import psd from './utils/psd'
 import log from './utils/log'
 
 class Lia {
     constructor(options) {
+        if (options.psd) {
+            let {rewriteOption, rewriteContext} = psd.process(options)
+            options = rewriteOption
+            this.rewriteContext = rewriteContext
+        }
+
         this.options = Object.assign({
             src: ['*.png'],
             image: 'build/sprite.png',
@@ -20,7 +27,8 @@ class Lia {
             padding: 10,
             algorithm: 'binary-tree',
             tmpl: '',
-            quiet: false
+            quiet: false,
+            psd: false
         }, options, {
             src: options.src.splice ? options.src : [options.src]
         })
@@ -49,6 +57,10 @@ class Lia {
 
         if (opt.style) {
             this._outputStyle(result)
+        }
+
+        if (opt.psd) {
+            psd.clear()
         }
     }
 
