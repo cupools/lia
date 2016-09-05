@@ -267,4 +267,26 @@ describe('Main', function() {
             expect('test/tmp/sprite.css').to.be.exist
         })
     })
+
+    describe('call Lia with psd', function() {
+        beforeEach(function() {
+            fs.emptyDirSync('test/tmp')
+        })
+
+        let Lia = require('../src/lia').default
+
+        it('should works with javascript template', function() {
+            let lia = new Lia({
+                src: 'group/',
+                image: 'test/tmp/sprite.png',
+                style: 'test/tmp/sprite.js',
+                tmpl: 'test/fixtures/psd.ejs',
+                psd: 'test/fixtures/keyframes.psd',
+                quiet: true
+            })
+
+            expect(lia.run.bind(lia)).to.not.throw(Error)
+            expect('test/tmp/sprite.js').to.be.exist
+        })
+    })
 })
