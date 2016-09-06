@@ -7,7 +7,7 @@ import glob from 'glob'
 
 import './css-plugin'
 
-describe('cmd - lia psd', function() {
+describe('utils - psd', function() {
     before(function() {
         fs.emptyDirSync('test/tmp')
         process.chdir('test/tmp')

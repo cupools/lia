@@ -2,6 +2,7 @@ import chokidar from 'chokidar'
 import path from 'path'
 import Lia from '../lia'
 import log from '../utils/log'
+import readConf from '../utils/readConf'
 
 class Task {
     constructor(sprites) {
@@ -38,15 +39,7 @@ let watching = {
     pond: [],
     ignores: [],
     main() {
-        let config = []
-        let confPath = path.resolve('sprite_conf.js')
-
-        try {
-            config = require(confPath)
-        } catch (e) {
-            log.warn('sprite_conf.js not found or something wrong. Try `sprites init`.')
-            return false
-        }
+        let config = readConf()
 
         config.map(conf => {
             let sprites = new Lia(conf)
