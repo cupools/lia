@@ -14,7 +14,8 @@ If you are tend to build sprite images according to stylesheet, maybe you like [
 - Output multiple sprite pictures and stylesheet files in once time.
 - Monitor file changes and incremental recompilation.
 - Create sprites picture in current folder easily. May be useful for css or canvas keyframes animation.
-- Support custom template for coordinates infomation. It means scss, js and any format you want can be built.
+- Supports custom template for coordinates infomation. It means scss, js and any format you want can be built.
+- Supports reading `.psd` directly, and then output sprite images by layers or groups with information context from Photoshop.
 
 ## Getting started
 
@@ -167,6 +168,10 @@ Having get those stylesheet files and sprite images, you can use it through `@ex
 - type: `String`
 - desc: the path of template file, which is used to output not only stylesheet file. Uses [Ejs](https://github.com/tj/ejs).
 - default: ''
+
+### psd
+- type: `String`
+- desc: the path of Photoshop file. If exist, [src](#src) should mapped to layers' name or groups' name in `.psd`.
 
 ## Examples
 
@@ -331,7 +336,16 @@ var opt = {
 }
 ```
 
-## Update
+### 4. Work with `.psd`
+It's possible to read layers or group from `.psd` directly when `.psd` file path is given.
+
+It supports output normally sprite image or keyframe sprite image.
+
+Currently to avoid get wrong size and performance of pictures, __each Photoshop layer that are expected to be outputed should be rasterized before running Lia__. And the hack way may be resolved in the near furture.
+
+## Changelog
+- v2.1.0
+    - Supports reading `.psd` directly with option `psd`
 - v2.0.0
     - Easier and stronger template supports with `Ejs`
     - Remove `option.wrap` and add `option.decimalPlaces`
