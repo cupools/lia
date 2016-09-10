@@ -15,7 +15,7 @@ If you are tend to build sprite images according to stylesheet, maybe you like [
 - Monitor file changes and incremental recompilation.
 - Create sprites picture in current folder easily. May be useful for css or canvas keyframes animation.
 - Supports custom template for coordinates infomation. It means scss, js and any format you want can be built.
-- Supports reading `.psd` directly, and then output sprite images by layers or groups with information context from Photoshop.
+- Supports reading `.psd` directly, and then output sprite images by layers or group with information context from Photoshop.
 
 ## Getting started
 
@@ -171,7 +171,7 @@ Having get those stylesheet files and sprite images, you can use it through `@ex
 
 ### psd
 - type: `String`
-- desc: the path of Photoshop file. If exist, [src](#src) should mapped to layers' name or groups' name in `.psd`.
+- desc: the path of Photoshop file. If exist, [src](#src) should match layers' name or groups' name in `.psd`.
 
 ## Examples
 
@@ -252,8 +252,21 @@ The Ejs template has the follow context
             height: 0
         },
         x: 0, // offset x
-        y: 0 // offset y
+        y: 0, // offset y
+        layer: { // Photoshop layer information if `psd` exist
+            name: '', // layer name
+            top: 0, // coordinate in Photoshop
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: 0,
+            height: 0
+        }
     }, ...],
+    psd: { // Photoshop file information if `psd` exist
+        width: 0,
+        height: 0
+    },
     _options: {} // the options you provide, can also inject some other data
 }
 ```
@@ -337,11 +350,100 @@ var opt = {
 ```
 
 ### 4. Work with `.psd`
-It's possible to read layers or group from `.psd` directly when `.psd` file path is given.
+It's possible to read layers or group from Photoshop directly. When `.psd` filepath is given, `src` will be the glob pattern match layers' or group's name instead of filepath.
 
-It supports output normally sprite image or keyframe sprite image.
+And Lia is abled to output normally sprite image or keyframe sprite image.
 
-Currently to avoid get wrong size and performance of pictures, __each Photoshop layer that are expected to be outputed should be rasterized before running Lia__. And the hack way may be resolved in the near furture.
+![psd_sprite](docs/psd-sprite.png)
+
+```js
+// normal
+module.exports = [{
+    src: 'icon*',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    padding: 0,
+    algorithm: 'left-right',
+    psd: 'demo.psd'
+}]
+```
+
+```js
+// keyframes
+module.exports = [{
+    src: 'group/',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    padding: 0,
+    algorithm: 'left-right',
+    psd: 'demo.psd'
+}]
+```
+
+To be simple, only when `src` has a single group that ends up with `/` will be considered to be a keyframe. Otherwise `src` will match layers' name in `.psd` while invisible layers and groups are ignored.
+
+Currently to avoid get wrong size and performance of pictures, __each Photoshop layer that are expected to be outputed should be rasterized before running Lia__. It suggests to use Photoshop action to do the repeat works now. And the problem is probably to be resolve in the next version.
+
+What's more, when running Lia, a context with Photoshop information is available in render template. It's helpful in locating element in the viewport, with CSS or JavaScript. Here is the CSS example.
+
+Conf:
+
+```js
+module.exports = [{
+    src: 'icon*',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    algorithm: 'left-right',
+    padding: 0,
+    tmpl: 'css.ejs',
+    psd: 'demo.psd'
+}]
+```
+
+Template: 
+
+```ejs
+<% items.forEach(function(item) { -%>
+.<%= item.name %> {
+    position: absolute;
+    top: <%= item.layer.top + unit %>,
+    left: <%= item.layer.left + unit %>
+    width: <%= item.size.width + unit %>;
+    height: <%= item.size.height + unit %>;
+    background: url('<%= path %>') no-repeat;
+    background-size: cover;
+    background-position: <%= -item.x + unit %> <%= -item.y + unit %>;
+}
+<% }) -%>
+```
+
+Output: 
+
+```css
+.icon1 {
+    position: absolute;
+    top: 96px,
+    left: 96px
+    width: 64px;
+    height: 64px;
+    background: url('./sprite.png') no-repeat;
+    background-size: cover;
+    background-position: 0px 0px;
+}
+.icon2 {
+    position: absolute;
+    top: 64px,
+    left: 64px
+    width: 128px;
+    height: 128px;
+    background: url('./sprite.png') no-repeat;
+    background-size: cover;
+    background-position: -64px 0px;
+}
+...
+```
+
+In addition, to keep correct order of layers from Photoshop, keyframe sprite images' item name is set as id number instead of layer name.
 
 ## Changelog
 - v2.1.0
