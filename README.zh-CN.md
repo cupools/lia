@@ -70,7 +70,7 @@ module.exports = [{
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
-    psd: ''
+    psd: '',
     quiet: false
 }];
 ```
