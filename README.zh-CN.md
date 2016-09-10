@@ -13,6 +13,7 @@
 - 支持监听文件改动并按需编译
 - 支持在当前文件夹快速创建精灵图片，可用于创建组帧图片和 canvas 动画的场景
 - 支持自定义模板输出图片坐标信息，可以是 SCSS, JSON, JS 或者任意格式类型
+- 支持直接读取 `.psd` 文件，根据图层或分组输出精灵图片，包括设计稿中的坐标信息
 
 ## 使用
 
@@ -69,6 +70,7 @@ module.exports = [{
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
+    psd: ''
     quiet: false
 }];
 ```
@@ -166,6 +168,11 @@ module.exports = [{
 - 描述: 模板文件的路径，用来将坐标信息输出为各种格式的文件。使用 [Ejs](https://github.com/tj/ejs)
 - 默认: ''
 
+### psd
+- 类型: `String`
+- 描述: psd 文件的路径。如果存在，`src` 会匹配 psd 中的图层或分组名称
+- 默认: ''
+
 ## 示例
 
 ### 在当前文件夹快速创建精灵图片
@@ -245,8 +252,21 @@ $ lia -w
             height: 0
         },
         x: 0, // offset x
-        y: 0 // offset y
+        y: 0, // offset y
+        layer: { // Photoshop layer information if `psd` exist
+            name: '', // layer name
+            top: 0, // coordinate in Photoshop
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: 0,
+            height: 0
+        }
     }, ...],
+    psd: { // Photoshop file information if `psd` exist
+        width: 0,
+        height: 0
+    },
     _options: {} // the options you provide, can also inject some other data
 }
 ```
@@ -328,7 +348,105 @@ var opt = {
 }
 ```
 
+### 4. 配合 `.psd` 输出图片
+Lia 能够直接读取 psd 文件中的图层和分组。当配置了 psd 文件的路径，`src` 将会通过 Glob 规则匹配 psd 中图层或者分组的名称，而非文件路径。
+
+同时 Lia 支持输出普通的精灵图片和组帧精灵图片。
+
+![psd_sprite](docs/psd-sprite.png)
+
+```js
+// normal
+module.exports = [{
+    src: 'icon*',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    padding: 0,
+    algorithm: 'left-right',
+    psd: 'demo.psd'
+}]
+```
+
+```js
+// keyframes
+module.exports = [{
+    src: 'group/',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    padding: 0,
+    algorithm: 'left-right',
+    psd: 'demo.psd'
+}]
+```
+
+为了方便使用，当且仅当 `src` 是一个单独的 psd 分组名称并且以 `/` 结束会被识别为组帧精灵图片，分组下的每一个可见图层为宽高一致的一帧。否则，`src` 将会匹配图层名称，并且忽略不可见的图层和所有分组。
+
+目前为了避免图片大小数据错误和图层蒙版表现问题，__每一个需要被导出的图片都需要在执行 Lia 之前栅格化__。目前建议通过 Photoshop 动作去处理合并图层和栅格化这些重复的工作。这个问题会在之后的版本中解决或绕过。
+
+除此之外，执行 Lia 的过程中，会在模板中的上下文中提供可用的 Photoshop 的坐标信息等数据。这将能够自动化将元素定位到 viewport 中，通过 CSS 或 JavaScript 都行。下面是一个 CSS 的示例。
+
+配置文件:
+
+```js
+module.exports = [{
+    src: 'icon*',
+    image: 'build/sprite.png',
+    style: 'build/sprite.css',
+    algorithm: 'left-right',
+    padding: 0,
+    tmpl: 'css.ejs',
+    psd: 'demo.psd'
+}]
+```
+
+模板: 
+
+```ejs
+<% items.forEach(function(item) { -%>
+.<%= item.name %> {
+    position: absolute;
+    top: <%= item.layer.top + unit %>,
+    left: <%= item.layer.left + unit %>
+    width: <%= item.size.width + unit %>;
+    height: <%= item.size.height + unit %>;
+    background: url('<%= path %>') no-repeat;
+    background-size: cover;
+    background-position: <%= -item.x + unit %> <%= -item.y + unit %>;
+}
+<% }) -%>
+```
+
+输出: 
+
+```css
+.icon1 {
+    position: absolute;
+    top: 96px,
+    left: 96px
+    width: 64px;
+    height: 64px;
+    background: url('./sprite.png') no-repeat;
+    background-size: cover;
+    background-position: 0px 0px;
+}
+.icon2 {
+    position: absolute;
+    top: 64px,
+    left: 64px
+    width: 128px;
+    height: 128px;
+    background: url('./sprite.png') no-repeat;
+    background-size: cover;
+    background-position: -64px 0px;
+}
+...
+```
+
+此外需要注意的是，为了避免图层名称排序与设计稿中实际的图层排序不符，导致输出的精灵图的顺序错误，组帧精灵图的上下文中的帧图片名称不是图层名称而是数字序号。
+
 ## 更新日志
+- v2.1.0
+    - 支持通过 `psd` 参数直接读取 psd 文件输出精灵图片并注入模板上下文
 - v2.0.0
     - 更简单和灵活的自定义模板支持，基于 `Ejs` 实现
     - 移除 `wrap` 参数，增加 `decimalPlaces` 参数

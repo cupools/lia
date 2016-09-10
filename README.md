@@ -1,4 +1,5 @@
-# Lia
+
+psd: '',# Lia
 
 [![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
 [![Coverage Status](https://coveralls.io/repos/github/cupools/lia/badge.svg?branch=master)](https://coveralls.io/github/cupools/lia?branch=master)
@@ -72,6 +73,7 @@ module.exports = [{
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
+    psd: '',
     quiet: false
 }];
 ```
@@ -172,6 +174,7 @@ Having get those stylesheet files and sprite images, you can use it through `@ex
 ### psd
 - type: `String`
 - desc: the path of Photoshop file. If exist, [src](#src) should match layers' name or groups' name in `.psd`.
+- default: ''
 
 ## Examples
 
@@ -380,7 +383,7 @@ module.exports = [{
 }]
 ```
 
-To be simple, only when `src` has a single group that ends up with `/` will be considered to be a keyframe. Otherwise `src` will match layers' name in `.psd` while invisible layers and groups are ignored.
+To be simple, only when `src` is a single group name that ends up with `/` will be considered to be a keyframe sprite image, and each visible layers under the group is one frame with the same size. Otherwise `src` will match layers' name in `.psd` while invisible layers and groups are ignored.
 
 Currently to avoid get wrong size and performance of pictures, __each Photoshop layer that are expected to be outputed should be rasterized before running Lia__. It suggests to use Photoshop action to do the repeat works now. And the problem is probably to be resolve in the next version.
 
