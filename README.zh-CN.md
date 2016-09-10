@@ -110,7 +110,7 @@ module.exports = [{
 ### src
 - 类型: `Array`
 - 描述: 图片路径, 使用 [glob-patterns](https://github.com/isaacs/node-glob)
-- 默认: ['\*\*/sprite-*.png']
+- default: ['*.png']
 
 ### image
 - 类型: `String`
