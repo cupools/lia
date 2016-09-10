@@ -1,5 +1,4 @@
-
-psd: '',# Lia
+# Lia
 
 [![Build Status](https://travis-ci.org/cupools/lia.svg?branch=master)](https://travis-ci.org/cupools/lia)
 [![Coverage Status](https://coveralls.io/repos/github/cupools/lia/badge.svg?branch=master)](https://coveralls.io/github/cupools/lia?branch=master)
@@ -409,8 +408,8 @@ Template:
 <% items.forEach(function(item) { -%>
 .<%= item.name %> {
     position: absolute;
-    top: <%= item.layer.top + unit %>,
-    left: <%= item.layer.left + unit %>
+    top: <%= item.layer.top + unit %>;
+    left: <%= item.layer.left + unit %>;
     width: <%= item.size.width + unit %>;
     height: <%= item.size.height + unit %>;
     background: url('<%= path %>') no-repeat;
@@ -425,8 +424,8 @@ Output:
 ```css
 .icon1 {
     position: absolute;
-    top: 96px,
-    left: 96px
+    top: 96px;
+    left: 96px;
     width: 64px;
     height: 64px;
     background: url('./sprite.png') no-repeat;
@@ -435,8 +434,8 @@ Output:
 }
 .icon2 {
     position: absolute;
-    top: 64px,
-    left: 64px
+    top: 64px;
+    left: 64px;
     width: 128px;
     height: 128px;
     background: url('./sprite.png') no-repeat;

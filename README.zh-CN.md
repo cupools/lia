@@ -405,8 +405,8 @@ module.exports = [{
 <% items.forEach(function(item) { -%>
 .<%= item.name %> {
     position: absolute;
-    top: <%= item.layer.top + unit %>,
-    left: <%= item.layer.left + unit %>
+    top: <%= item.layer.top + unit %>;
+    left: <%= item.layer.left + unit %>;
     width: <%= item.size.width + unit %>;
     height: <%= item.size.height + unit %>;
     background: url('<%= path %>') no-repeat;
@@ -421,8 +421,8 @@ module.exports = [{
 ```css
 .icon1 {
     position: absolute;
-    top: 96px,
-    left: 96px
+    top: 96px;
+    left: 96px;
     width: 64px;
     height: 64px;
     background: url('./sprite.png') no-repeat;
@@ -431,8 +431,8 @@ module.exports = [{
 }
 .icon2 {
     position: absolute;
-    top: 64px,
-    left: 64px
+    top: 64px;
+    left: 64px;
     width: 128px;
     height: 128px;
     background: url('./sprite.png') no-repeat;
