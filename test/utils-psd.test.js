@@ -4,6 +4,7 @@ import { expect } from 'chai'
 import fs from 'fs-extra'
 import images from 'images'
 import glob from 'glob'
+import path from 'path'
 
 import './css-plugin'
 
@@ -26,7 +27,7 @@ describe('utils - psd', function() {
         }
 
         let {_ret, rewriteOption} = psd.process(opt)
-        expect(rewriteOption.src).to.contain('/.lia/*')
+        expect(rewriteOption.src).to.contain(path.normalize('/.lia/*'))
         expect(_ret.psd.size.width).to.equal(256)
         expect(_ret.psd.size.height).to.equal(512)
         expect(_ret.items).to.have.lengthOf(4)
@@ -56,7 +57,7 @@ describe('utils - psd', function() {
         }
 
         let {_ret, rewriteOption} = psd.process(opt)
-        expect(rewriteOption.src).to.contain('/.lia/*')
+        expect(rewriteOption.src).to.contain(path.normalize('/.lia/*'))
         expect(_ret.psd.size.width).to.equal(256)
         expect(_ret.psd.size.height).to.equal(512)
         expect(_ret.items).to.have.lengthOf(6)
