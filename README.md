@@ -72,6 +72,7 @@ module.exports = [{
     padding: 10,
     algorithm: 'binary-tree',
     tmpl: '',
+    psd: '',
     quiet: false
 }];
 ```
@@ -172,6 +173,7 @@ Having get those stylesheet files and sprite images, you can use it through `@ex
 ### psd
 - type: `String`
 - desc: the path of Photoshop file. If exist, [src](#src) should match layers' name or groups' name in `.psd`.
+- default: ''
 
 ## Examples
 
@@ -380,7 +382,7 @@ module.exports = [{
 }]
 ```
 
-To be simple, only when `src` has a single group that ends up with `/` will be considered to be a keyframe. Otherwise `src` will match layers' name in `.psd` while invisible layers and groups are ignored.
+To be simple, only when `src` is a single group name that ends up with `/` will be considered to be a keyframe sprite image, and each visible layers under the group is one frame with the same size. Otherwise `src` will match layers' name in `.psd` while invisible layers and groups are ignored.
 
 Currently to avoid get wrong size and performance of pictures, __each Photoshop layer that are expected to be outputed should be rasterized before running Lia__. It suggests to use Photoshop action to do the repeat works now. And the problem is probably to be resolve in the next version.
 
@@ -406,8 +408,8 @@ Template:
 <% items.forEach(function(item) { -%>
 .<%= item.name %> {
     position: absolute;
-    top: <%= item.layer.top + unit %>,
-    left: <%= item.layer.left + unit %>
+    top: <%= item.layer.top + unit %>;
+    left: <%= item.layer.left + unit %>;
     width: <%= item.size.width + unit %>;
     height: <%= item.size.height + unit %>;
     background: url('<%= path %>') no-repeat;
@@ -422,8 +424,8 @@ Output:
 ```css
 .icon1 {
     position: absolute;
-    top: 96px,
-    left: 96px
+    top: 96px;
+    left: 96px;
     width: 64px;
     height: 64px;
     background: url('./sprite.png') no-repeat;
@@ -432,8 +434,8 @@ Output:
 }
 .icon2 {
     position: absolute;
-    top: 64px,
-    left: 64px
+    top: 64px;
+    left: 64px;
     width: 128px;
     height: 128px;
     background: url('./sprite.png') no-repeat;
